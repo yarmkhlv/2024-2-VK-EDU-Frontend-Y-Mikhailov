@@ -24,17 +24,19 @@ const BINARY_PREFIXES = {
   8: "YB",
 };
 
+const TENTH_POWER_OF_TWO = 1024;
+
 export default function convertBytesToHuman(bytes) {
   const isNotValidBytes = typeof bytes !== "number" || bytes < 1;
   if (isNotValidBytes) return false;
-  if (bytes < 1024) return `${bytes} ${BINARY_PREFIXES[prefix]}`;
+  if (bytes < TENTH_POWER_OF_TWO) return `${bytes} ${BINARY_PREFIXES[0]}`;
 
   let prefix = 1;
 
   return (function recursionFunc(value) {
-    const numberWithNewUnits = value / 1024;
+    const numberWithNewUnits = Number(value / TENTH_POWER_OF_TWO);
 
-    if (numberWithNewUnits > 1024 && prefix !== 7) {
+    if (numberWithNewUnits > TENTH_POWER_OF_TWO && prefix !== 8) {
       prefix++;
       return recursionFunc(numberWithNewUnits);
     } else {
