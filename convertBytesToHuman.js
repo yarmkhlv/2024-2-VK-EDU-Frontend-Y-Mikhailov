@@ -27,7 +27,8 @@ const BINARY_PREFIXES = {
 const TENTH_POWER_OF_TWO = 1024;
 
 export default function convertBytesToHuman(bytes) {
-  const isNotValidBytes = typeof bytes !== "number" || bytes < 1;
+  const isNotValidBytes =
+    typeof bytes !== "number" || !Number.isFinite(bytes) || bytes < 0;
   if (isNotValidBytes) return false;
   if (bytes < TENTH_POWER_OF_TWO) return `${bytes} ${BINARY_PREFIXES[0]}`;
 
