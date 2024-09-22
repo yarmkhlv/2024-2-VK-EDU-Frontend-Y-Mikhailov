@@ -1,0 +1,40 @@
+# Node modules
+node_modules/
+
+# Директории и файлы сборки
+build/
+dist/
+.next/
+out/
+coverage/
+
+# Локальные файлы среды
+.env
+.env.local
+.env.*.local
+
+# Файлы конфигураций IDE и редакторов кода
+.vscode/
+.idea/
+
+# Локальные и временные файлы Git
+.git/
+
+# Лог-файлы
+*.log
+
+# Временные файлы
+*.tmp
+*.swp
+*.swo
+*.bak
+
+# Файлы системы
+.DS_Store
+Thumbs.db
+
+# Файлы и папки операционных систем
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
