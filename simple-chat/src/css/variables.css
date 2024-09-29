@@ -1,0 +1,12 @@
+:root {
+  --color-background-own-message: #007aff;
+  --color-text-own-message: #ffffff;
+
+  --color-background-message: #f2f2f7;
+  --color-text-message: #2c2c2e;
+
+  --color-chat-name: #0d1217;
+  --color-neutral: #686a8a;
+
+  --header-height: 56px;
+}

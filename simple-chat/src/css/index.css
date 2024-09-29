@@ -1,0 +1,163 @@
+@import url(reset.css);
+@import url(variables.css);
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100vh;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  font-family: 'Roboto', sans-serif;
+}
+
+.header {
+  height: var(--header-height);
+
+  border-bottom: 1px solid rgba(0, 0, 0, 0.13);
+}
+
+.header-container {
+  height: 100%;
+  padding: 4px 8px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 100%;
+}
+
+.return-button__img {
+  width: 100%;
+  height: auto;
+}
+
+.other-buttons-block {
+  display: flex;
+  column-gap: 20px;
+}
+
+.main {
+  height: calc(100vh - var(--header-height));
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.info-user-block {
+  display: flex;
+  align-items: center;
+
+  column-gap: 10px;
+}
+.info-user-logo {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+.info-user {
+  max-width: 200px;
+}
+.info-user__fio {
+  color: var(--color-chat-name);
+  font-weight: 600;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.info-user__entrytime {
+  color: var(--color-neutral);
+  font-weight: 500;
+}
+
+.chat-section {
+  flex: 1;
+  overflow-y: auto;
+
+  background-color: #f3f3f3;
+}
+
+.chat-section::-webkit-scrollbar {
+  display: none;
+}
+
+.input-section {
+  width: 100%;
+  margin-top: auto;
+  padding: 8px;
+
+  border-top: 1px solid rgba(0, 0, 0, 0.13);
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 10px;
+}
+.form-input {
+  flex: 1;
+
+  height: 56px;
+  padding: 8px;
+
+  border-radius: 8px;
+
+  background-color: #f0f0f3;
+
+  font-size: 18px;
+}
+
+.messages-list {
+  display: flex;
+  flex-direction: column;
+
+  row-gap: 8px;
+
+  padding: 10px 4px;
+}
+
+.message {
+  max-width: 85%;
+
+  padding: 12px;
+
+  border-radius: 8px;
+
+  word-wrap: break-word;
+}
+
+.another-persons-message {
+  align-self: flex-start;
+
+  background-color: #ffffff;
+}
+.own-message {
+  position: relative;
+  align-self: flex-end;
+
+  background-color: #474ff7;
+
+  color: #ffffff;
+}
+
+.message .time-message {
+  position: relative;
+  float: right;
+  bottom: -15px;
+
+  margin-left: 5px;
+
+  font-size: 10px;
+}
