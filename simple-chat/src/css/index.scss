@@ -1,5 +1,6 @@
-@import url(reset.css);
-@import url(variables.css);
+@import './reset.scss';
+@import './variables.scss';
+@import './breakpoints.scss';
 
 html {
   height: 100%;
@@ -23,6 +24,10 @@ body {
 
 .header-container {
   height: 100%;
+  max-width: 750px;
+
+  margin: 0 auto;
+
   padding: 4px 8px;
 }
 
@@ -35,6 +40,12 @@ body {
   height: 100%;
 }
 
+.return-button-block {
+  @include tablet {
+    margin-right: 20px;
+  }
+}
+
 .return-button__img {
   width: 100%;
   height: auto;
@@ -45,19 +56,15 @@ body {
   column-gap: 20px;
 }
 
-.main {
-  height: calc(100vh - var(--header-height));
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
 .info-user-block {
   display: flex;
   align-items: center;
 
   column-gap: 10px;
+
+  @include tablet {
+    margin-right: auto;
+  }
 }
 .info-user-logo {
   width: 35px;
@@ -81,15 +88,28 @@ body {
   font-weight: 500;
 }
 
+.main {
+  height: calc(100vh - var(--header-height));
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .chat-section {
   flex: 1;
   overflow-y: auto;
 
-  background-color: #f3f3f3;
+  background-color: var(--color-background-chat);
 }
 
 .chat-section::-webkit-scrollbar {
   display: none;
+}
+
+.chat-container {
+  max-width: 700px;
+  margin: 0 auto;
 }
 
 .input-section {
@@ -98,6 +118,11 @@ body {
   padding: 8px;
 
   border-top: 1px solid rgba(0, 0, 0, 0.13);
+}
+
+.input-container {
+  max-width: 750px;
+  margin: 0 auto;
 }
 
 .form {
@@ -125,7 +150,11 @@ body {
 
   row-gap: 8px;
 
-  padding: 10px 4px;
+  padding: 10px;
+
+  @include tablet {
+    padding: 16px;
+  }
 }
 
 .message {
@@ -136,6 +165,7 @@ body {
   border-radius: 8px;
 
   word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .another-persons-message {
@@ -147,17 +177,15 @@ body {
   position: relative;
   align-self: flex-end;
 
-  background-color: #474ff7;
+  background-color: var(--color-background-own-message);
 
   color: #ffffff;
 }
 
 .message .time-message {
-  position: relative;
+  transform: translateY(10px);
   float: right;
-  bottom: -15px;
-
-  margin-left: 5px;
+  padding-left: 8px;
 
   font-size: 10px;
 }

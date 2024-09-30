@@ -1,7 +1,6 @@
 import { sendMessage } from './sendMessage';
-import { displayMessages } from './displayMessages';
+import { makeAnswerMessage } from './makeAnswerMessage';
 import { scrollToBottom } from './helpers';
-import { getMessagesStore } from './messagesStore';
 import { ELEMENTS } from './UI';
 
 ELEMENTS.SUBMIT_MESSAGE_BTN.addEventListener('click', (event) => {
@@ -11,9 +10,11 @@ ELEMENTS.SUBMIT_MESSAGE_BTN.addEventListener('click', (event) => {
 
   sendMessage(messageText);
 
-  displayMessages(getMessagesStore());
-
   ELEMENTS.CHAT_INPUT.value = '';
 
   scrollToBottom(ELEMENTS.CHAT_SECTION);
+
+  setTimeout(() => {
+    makeAnswerMessage();
+  }, 2500);
 });

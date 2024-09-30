@@ -12,5 +12,9 @@
     "eslint": "^9.11.1",
     "prettier": "^3.3.3",
     "vite": "^5.4.1"
+  },
+  "dependencies": {
+    "lorem-ipsum": "^2.0.8",
+    "sass": "^1.79.4"
   }
 }

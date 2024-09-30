@@ -1,5 +1,4 @@
 import './UI';
-import './messagesStore';
 import './helpers';
 import './eventListeners';
 

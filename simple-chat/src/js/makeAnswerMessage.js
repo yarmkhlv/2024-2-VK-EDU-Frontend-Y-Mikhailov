@@ -1,12 +1,21 @@
+import { loremIpsum } from 'lorem-ipsum';
+
 import { createMessage } from './createMessage';
 
-export function sendMessage(message) {
-  if (message.trim() === '') return;
+function generateRandomText() {
+  return loremIpsum({
+    count: 1,
+    units: 'sentences',
+    sentenceLowerBound: 5,
+    sentenceUpperBound: 10,
+  });
+}
 
+export function makeAnswerMessage() {
   const newMessage = {
-    text: message,
+    text: generateRandomText(),
     date: new Date().toISOString(),
-    owner: 'me',
+    owner: 'anotherUser',
   };
 
   const messagesWIthNew = JSON.parse(localStorage.getItem('messages')) || [];
