@@ -171,7 +171,7 @@ body {
 .another-persons-message {
   align-self: flex-start;
 
-  background-color: #ffffff;
+  background-color: var(--color-background-message);
 }
 .own-message {
   position: relative;
