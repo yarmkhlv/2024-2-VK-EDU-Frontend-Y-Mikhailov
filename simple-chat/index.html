@@ -4,40 +4,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Send a message</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    <link href="./src/css/index.scss" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link href="./src/css/index.scss" rel="stylesheet" />
   </head>
   <body>
     <header class="header">
       <div class="header-container">
         <nav class="header-content">
-          <div class="return-button-block">
+          <div class="left-block">
             <button class="return-button">
               <img
                 class="return-buttom__img"
-                src="./src/assets/icons/arrow_back.svg"
+                src="./src/assets/icons/menu.svg"
                 alt="array"
               />
             </button>
           </div>
-          <div class="info-user-block">
-            <img class="info-user-logo" src="./src/assets/images/avatar.png">
-            <div class="info-user">
-              <p class="info-user__fio">Имя Пользователя</p>
-              <p class="info-user__entrytime">В сети</p>
-            </div>
+          <div class="middle-block">
+            <p class="chat-list-text">Список чатов</p>
           </div>
-          <div class="other-buttons-block">
+          <div class="right-block">
             <div class="search-button-block">
               <button>
                 <img src="./src/assets/icons/search.svg" alt="array" />
-              </button>
-            </div>
-            <div class="params-button-block">
-              <button>
-                <img src="./src/assets/icons/more_vert.svg" alt="array" />
               </button>
             </div>
           </div>
@@ -45,32 +39,17 @@
       </div>
     </header>
     <main class="main">
-      <section class="chat-section">
-        <div class="chat-container">
-          <div class="messages-list">
-            <!-- Сообщения -->
-            </div>
+      <section class="chat-list-section">
+        <div class="chat-list-container">
+          <div class="chat-list">
+            <!-- Чаты тут -->
+          </div>
         </div>
-        
       </section>
-      <section class="input-section">
-        <div class="input-container">
-          <form class="form" action="/">
-            <input
-              class="form-input"
-              name="message-text"
-              placeholder="Введите сообщение"
-              type="text"
-            />
-            <button class="submit-btn" type="submit">
-              <img src="./src/assets/icons/send.svg" alt="send message">
-            </button>
-          </form>
-        </div>
-      </section>         
-        </div>
-      </div>
     </main>
-    <script type="module" src="./src/js/index.js"></script>
+    <button class="create-chat-btn">
+      <img alt="create-chat" src="./src/assets/icons/pen.svg" />
+    </button>
+    <script type="module" src="./src/js/index/index.js"></script>
   </body>
 </html>
