@@ -1,5 +1,5 @@
-import { convertDateForChatList } from '../helpers';
-import { ELEMENTS } from './UI';
+import { convertDateForChatList } from '../../helpers';
+import { ELEMENTS } from '../UI';
 
 export function renderChat(dataUser) {
   const elLinkWrapperChat = document.createElement('a');

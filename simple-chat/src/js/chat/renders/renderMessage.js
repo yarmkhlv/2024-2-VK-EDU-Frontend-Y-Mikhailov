@@ -1,5 +1,5 @@
-import { convertDateToTime } from '../helpers';
-import { ELEMENTS } from './UI';
+import { convertDateToTime } from '../../helpers';
+import { ELEMENTS } from '../UI';
 
 export function renderMessage(dataMessage) {
   const elMessage = document.createElement('div');

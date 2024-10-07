@@ -1,5 +1,5 @@
 import { generateRandomId } from '../helpers';
-import { renderChat } from './renderChat';
+import { renderChat } from './renders/renderChat';
 
 export function createNewChat(userName) {
   const userId = generateRandomId();

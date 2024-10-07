@@ -1,4 +1,4 @@
-import { ELEMENTS } from './UI';
+import { ELEMENTS } from '../UI';
 
 export function renderUserInfo(dataUser) {
   const elUserLogo = document.createElement('img');

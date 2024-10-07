@@ -1,5 +1,5 @@
 import { getQueryParam } from '../helpers';
-import { renderMessage } from './renderMessage';
+import { renderMessage } from './renders/renderMessage';
 
 export function sendMessage(message) {
   if (message.trim() === '') return;

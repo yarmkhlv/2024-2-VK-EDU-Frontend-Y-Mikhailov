@@ -3,7 +3,7 @@
   <head lang="en">
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Send a message</title>
+    <title>Список чатов</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -21,7 +21,7 @@
               <img
                 class="return-buttom__img"
                 src="./src/assets/icons/menu.svg"
-                alt="array"
+                alt="Изображение возвращения"
               />
             </button>
           </div>
@@ -30,8 +30,11 @@
           </div>
           <div class="right-block">
             <div class="search-button-block">
-              <button>
-                <img src="./src/assets/icons/search.svg" alt="array" />
+              <button class="search-button">
+                <img
+                  src="./src/assets/icons/search.svg"
+                  alt="Изображение поиска"
+                />
               </button>
             </div>
           </div>
@@ -43,13 +46,17 @@
         <div class="chat-list-container">
           <div class="chat-list">
             <!-- Чаты тут -->
+            <button class="create-chat-btn">
+              <img
+                alt="Изображение создания чата"
+                src="./src/assets/icons/pen.svg"
+              />
+            </button>
           </div>
         </div>
       </section>
     </main>
-    <button class="create-chat-btn">
-      <img alt="create-chat" src="./src/assets/icons/pen.svg" />
-    </button>
+
     <script type="module" src="./src/js/index/index.js"></script>
   </body>
 </html>

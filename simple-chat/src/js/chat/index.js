@@ -2,5 +2,5 @@ import './UI';
 import '../helpers';
 import './eventListeners';
 
-import './firstRender';
+import './renders/firstRender';
 import './sendMessage';

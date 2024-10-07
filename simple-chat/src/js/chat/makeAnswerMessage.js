@@ -1,6 +1,6 @@
 import { loremIpsum } from 'lorem-ipsum';
 
-import { renderMessage } from './renderMessage';
+import { renderMessage } from './renders/renderMessage';
 import { getQueryParam } from '../helpers';
 
 function generateRandomText() {

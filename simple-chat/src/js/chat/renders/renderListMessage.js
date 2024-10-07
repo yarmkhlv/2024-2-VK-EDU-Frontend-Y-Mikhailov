@@ -1,5 +1,5 @@
 import { renderMessage } from './renderMessage';
-import { getQueryParam } from '../helpers';
+import { getQueryParam } from '../../helpers';
 
 export function renderListMessage() {
   const userFromParam = Number(getQueryParam('user'));

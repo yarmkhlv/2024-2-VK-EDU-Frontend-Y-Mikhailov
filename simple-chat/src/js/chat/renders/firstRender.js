@@ -1,6 +1,6 @@
 import { renderMessage } from './renderMessage';
 import { renderUserInfo } from './renderUserInfo';
-import { getQueryParam } from '../helpers';
+import { getQueryParam } from '../../helpers';
 
 export function firstRender() {
   const userFromParam = Number(getQueryParam('user'));
