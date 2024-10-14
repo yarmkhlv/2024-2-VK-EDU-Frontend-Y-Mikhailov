@@ -1,5 +1,5 @@
 export default {
-  base: './',
+  base: '/2024-2-VK-EDU-Frontend-Y-Mikhailov/',
   build: {
     rollupOptions: {
       input: {
