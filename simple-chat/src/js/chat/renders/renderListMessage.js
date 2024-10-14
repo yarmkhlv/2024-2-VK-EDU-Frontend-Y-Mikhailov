@@ -8,7 +8,7 @@ export function renderListMessage() {
   if (usersFromLocal.length > 0) {
     const findedUser = usersFromLocal.find((user) => user.id === userFromParam);
 
-    findedUser.messages.forEach((item) => renderMessage(item));
+    findedUser.messages.forEach(renderMessage);
   }
 }
 
