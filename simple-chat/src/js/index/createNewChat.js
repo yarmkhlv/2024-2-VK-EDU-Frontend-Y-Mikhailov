@@ -15,5 +15,5 @@ export function createNewChat(userName) {
 
   localStorage.setItem('users', JSON.stringify(usersFromLocalStorage));
 
-  window.location.href = `/chat.html?user=${userId}`;
+  window.location.href = `chat.html?user=${userId}`;
 }
