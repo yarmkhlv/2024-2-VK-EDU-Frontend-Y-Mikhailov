@@ -71,7 +71,12 @@
   column-gap: 20px;
 }
 
-.return-button,
+.return-link {
+  display: block;
+  padding: 8px;
+}
+
+.menu-button,
 .search-button,
 .params-button {
   position: relative;
