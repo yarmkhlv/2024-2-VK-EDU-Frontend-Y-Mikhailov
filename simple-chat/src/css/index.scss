@@ -8,10 +8,6 @@
 @import './components/sections/chat.scss';
 @import './components/sections/input.scss';
 
-*:focus-visible {
-  outline: rgb(96, 107, 207) solid;
-}
-
 html {
   height: 100%;
 }
@@ -32,4 +28,9 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: var(--accessibility-outline);
 }

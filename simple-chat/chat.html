@@ -14,8 +14,8 @@
       <div class="header-container">
         <nav class="header-content">
           <div class="left-block">
-            <a href="index.html"
-            >  <button class="return-button">
+            <a href="index.html" tabindex="0"
+            >  <button class="return-button" tabindex="-1">
               <img
                 class="return-buttom__img"
                 src="./src/assets/icons/arrow_back.svg"
@@ -29,12 +29,12 @@
           </div>
           <div class="right-block">
             <div class="search-button-block">
-              <button class="search-button">
+              <button class="search-button" >
                 <img src="./src/assets/icons/search.svg" alt="Изображение поиска" />
               </button>
             </div>
             <div class="params-button-block">
-              <button class="params-button">
+              <button class="params-button" >
                 <img src="./src/assets/icons/more_vert.svg" alt="Изображение настроек" />
               </button>
             </div>
@@ -53,7 +53,7 @@
       </section>
       <section class="input-section">
         <div class="input-container">
-          <form class="form" action="/">
+          <form class="form" action="/" >
             <input
               class="form-input"
               name="message-text"
@@ -61,7 +61,7 @@
               type="text"
               autofocus 
             />
-            <button class="submit-btn" type="submit">
+            <button class="submit-btn" type="submit" >
               <img class="submit-btn-img" src="./src/assets/icons/send.svg" alt="Изображение отправки сообщения">
             </button>
           </form>

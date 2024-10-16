@@ -90,10 +90,6 @@
     transition: opacity 0.3s ease;
   }
 
-  &:focus-visible {
-    outline: rgb(96, 107, 207) solid;
-  }
-
   &:hover {
     &::before {
       opacity: 1;

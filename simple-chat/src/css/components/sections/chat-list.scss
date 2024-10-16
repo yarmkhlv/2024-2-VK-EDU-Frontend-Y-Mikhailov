@@ -115,7 +115,7 @@
     }
 
     &:focus-visible {
-      outline: rgb(96, 107, 207) solid;
+      outline: var(--accessibility-outline);
     }
   }
 }
