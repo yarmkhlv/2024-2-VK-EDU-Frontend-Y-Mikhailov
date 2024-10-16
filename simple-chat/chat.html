@@ -2,40 +2,50 @@
 <html>
   <head lang="en">
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
     <title>Отправить сообщение</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
-    <link href="./src/css/index.scss" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link href="./src/css/index.scss" rel="stylesheet" />
   </head>
   <body>
     <header class="header">
       <div class="header-container">
         <nav class="header-content">
           <div class="left-block">
-            <a href="index.html" tabindex="0"
-            >  <button class="return-button" tabindex="-1">
+            <a href="index.html">
               <img
                 class="return-buttom__img"
                 src="./src/assets/icons/arrow_back.svg"
-                alt="Изображение возвращения"
+                alt="Изображение меню(навигации)"
               />
-            </button></a>
-          
+            </a>
           </div>
           <div class="middle-block">
-           <!-- Инфо юзера из скрипта -->
+            <!-- Инфо юзера из скрипта -->
           </div>
           <div class="right-block">
             <div class="search-button-block">
-              <button class="search-button" >
-                <img src="./src/assets/icons/search.svg" alt="Изображение поиска" />
+              <button class="search-button">
+                <img
+                  src="./src/assets/icons/search.svg"
+                  alt="Изображение поиска"
+                />
               </button>
             </div>
             <div class="params-button-block">
-              <button class="params-button" >
-                <img src="./src/assets/icons/more_vert.svg" alt="Изображение настроек" />
+              <button class="params-button">
+                <img
+                  src="./src/assets/icons/more_vert.svg"
+                  alt="Изображение настроек"
+                />
               </button>
             </div>
           </div>
@@ -47,29 +57,30 @@
         <div class="chat-container">
           <div class="messages-list">
             <!-- Сообщения -->
-            </div>
+          </div>
         </div>
-        
       </section>
       <section class="input-section">
         <div class="input-container">
-          <form class="form" action="/" >
+          <form class="form" action="/">
             <input
               class="form-input"
               name="message-text"
               placeholder="Введите сообщение"
               type="text"
-              autofocus 
+              autofocus
               autocomplete="off"
             />
-            <button class="submit-btn" type="submit" >
-              <img class="submit-btn-img" src="./src/assets/icons/send.svg" alt="Изображение отправки сообщения">
+            <button class="submit-btn" type="submit">
+              <img
+                class="submit-btn-img"
+                src="./src/assets/icons/send.svg"
+                alt="Изображение отправки сообщения"
+              />
             </button>
           </form>
         </div>
-      </section>         
-        </div>
-      </div>
+      </section>
     </main>
     <script type="module" src="./src/js/chat/index.js"></script>
   </body>

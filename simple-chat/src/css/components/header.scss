@@ -75,6 +75,9 @@
 .search-button,
 .params-button {
   position: relative;
+
+  padding: 8px;
+
   &::before {
     content: '';
     position: absolute;
