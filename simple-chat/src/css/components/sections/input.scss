@@ -1,0 +1,31 @@
+.input-section {
+  width: 100%;
+  margin-top: auto;
+  padding: 8px;
+
+  border-top: 1px solid rgba(0, 0, 0, 0.13);
+}
+
+.input-container {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 10px;
+}
+.form-input {
+  flex: 1;
+
+  height: 56px;
+  padding: 8px;
+
+  border-radius: 8px;
+
+  background-color: #f0f0f3;
+
+  font-size: 18px;
+}
