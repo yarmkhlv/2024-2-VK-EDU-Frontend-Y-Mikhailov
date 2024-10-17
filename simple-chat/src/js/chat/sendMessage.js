@@ -18,5 +18,5 @@ export function sendMessage(message) {
 
   localStorage.setItem('users', JSON.stringify(usersFromLocal));
 
-  renderMessage(newMessage);
+  renderMessage(newMessage, true);
 }

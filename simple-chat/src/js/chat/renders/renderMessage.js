@@ -1,7 +1,7 @@
 import { convertDateToTime } from '../../helpers';
 import { ELEMENTS } from '../UI';
 
-export function renderMessage(dataMessage) {
+export function renderMessage(dataMessage, flagNew = null) {
   const elMessage = document.createElement('div');
   const elTimeOfMessage = document.createElement('span');
 
@@ -9,6 +9,9 @@ export function renderMessage(dataMessage) {
     elMessage.classList.add('message', 'own-message');
   } else {
     elMessage.classList.add('message', 'another-persons-message');
+  }
+  if (flagNew) {
+    elMessage.classList.add('newMessage');
   }
   elTimeOfMessage.classList.add('time-message');
 

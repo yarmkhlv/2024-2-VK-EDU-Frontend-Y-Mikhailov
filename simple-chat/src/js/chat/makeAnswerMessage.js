@@ -27,5 +27,5 @@ export function makeAnswerMessage() {
 
   localStorage.setItem('users', JSON.stringify(usersFromLocal));
 
-  renderMessage(newMessage);
+  renderMessage(newMessage, true);
 }

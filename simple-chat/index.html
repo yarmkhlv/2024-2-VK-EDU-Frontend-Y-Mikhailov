@@ -2,7 +2,10 @@
 <html>
   <head lang="en">
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
     <title>Список чатов</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,9 +20,8 @@
       <div class="header-container">
         <nav class="header-content">
           <div class="left-block">
-            <button class="return-button">
+            <button class="menu-button">
               <img
-                class="return-buttom__img"
                 src="./src/assets/icons/menu.svg"
                 alt="Изображение возвращения"
               />
@@ -42,7 +44,7 @@
       </div>
     </header>
     <main class="main">
-      <section class="chat-list-section">
+      <section class="chat-list-section" tabindex="-1">
         <div class="chat-list-container">
           <div class="chat-list">
             <!-- Чаты тут -->
