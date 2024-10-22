@@ -29,3 +29,15 @@
 
   font-size: 18px;
 }
+
+.submit-btn {
+  padding: 8px;
+}
+
+.submit-btn-img {
+  transition: filter 0.3s;
+  &:hover {
+    filter: grayscale(100%) brightness(1) sepia(1) hue-rotate(180deg)
+      saturate(500%) contrast(2);
+  }
+}

@@ -31,6 +31,11 @@
     column-gap: 8px;
 
     padding: 9px;
+
+    &:hover {
+      background-color: #f5f5f5;
+      transition: background-color 0.5s ease;
+    }
   }
 
   .link-wrapper-chat {
@@ -101,9 +106,42 @@
     right: 10px;
     background-color: greenyellow;
     transition: all 0.3s;
+    animation: pulse 2s infinite;
+
+    &:hover {
+      animation: none;
+      transform: scale(1.1);
+      transition: transform 0.5s ease;
+    }
 
     &:focus-visible {
-      outline: rgb(96, 107, 207) solid;
+      outline: var(--accessibility-outline);
     }
+  }
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba(28 255 0 / 40%);
+  }
+  70% {
+    -webkit-box-shadow: 0 0 0 10px rgba(28 255 0 /0);
+  }
+  100% {
+    -webkit-box-shadow: 0 0 0 0 rgba(28 255 0 / 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgba(28 255 0 / 40%);
+    box-shadow: 0 0 0 0 rgba(28 255 0 / 40%);
+  }
+  70% {
+    -moz-box-shadow: 0 0 0 10px rgba(28 255 0 / 0);
+    box-shadow: 0 0 0 10px rgba(28 255 0 / 0);
+  }
+  100% {
+    -moz-box-shadow: 0 0 0 0 rgba(28 255 0 / 0);
+    box-shadow: 0 0 0 0 rgba(28 255 0 / 0);
   }
 }

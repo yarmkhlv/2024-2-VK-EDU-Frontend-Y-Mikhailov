@@ -1,5 +1,4 @@
 import { generateRandomId } from '../helpers';
-import { renderChat } from './renders/renderChat';
 
 export function createNewChat(userName) {
   const userId = generateRandomId();
@@ -16,5 +15,5 @@ export function createNewChat(userName) {
 
   localStorage.setItem('users', JSON.stringify(usersFromLocalStorage));
 
-  renderChat(newUser);
+  window.location.href = `chat.html?user=${userId}`;
 }
