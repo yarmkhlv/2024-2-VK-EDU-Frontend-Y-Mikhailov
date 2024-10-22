@@ -1,0 +1,60 @@
+@use '../../../styles/base/breakpoints.scss' as *;
+@use '../../../styles/base/variables.scss' as *;
+
+.user {
+  display: flex;
+  column-gap: 8px;
+
+  padding: 9px;
+
+  &:hover {
+    background-color: #f5f5f5;
+    transition: background-color 0.5s ease;
+  }
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  flex: 1;
+
+  overflow: hidden;
+}
+
+.userImg {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+}
+
+.userInfoUpper {
+  display: flex;
+}
+.infoUpperTitle {
+  flex: 1;
+  font-weight: 500;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lastMessageStatus {
+  font-size: 12px;
+}
+
+.userInfoBottom {
+  font-size: 14px;
+  color: #656565;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// .user-chat__status {
+//   margin-left: auto;
+
+//   display: flex;
+//   flex-direction: column;
+// }
