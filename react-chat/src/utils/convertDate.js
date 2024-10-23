@@ -1,4 +1,4 @@
-export function convertDateForChatList(dateFormatISO) {
+export function convertDate(dateFormatISO) {
   const messageTime = new Date(dateFormatISO);
   const today = new Date();
 

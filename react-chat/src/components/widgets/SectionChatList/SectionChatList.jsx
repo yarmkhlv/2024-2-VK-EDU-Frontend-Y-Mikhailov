@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import { ChatItem } from '../ChatItem/ChatItem';
 import EditIcon from '@mui/icons-material/Edit';
 import styles from './sectionChatList.module.scss';
@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 export function SectionChatList({ setId }) {
   const { isOpen, openModal, closeModal } = useModal();
   const [userName, setUserName] = useState('');
+  const userNameInputId = useId();
 
   const usersFromLocalStorage = JSON.parse(localStorage.getItem('users')) || [];
 
@@ -26,7 +27,8 @@ export function SectionChatList({ setId }) {
   });
 
   const handleClickBtnCreate = () => {
-    createNewChat(userName);
+    const trimmedUserName = userName.trim();
+    createNewChat(trimmedUserName);
     setUserName('');
     closeModal();
   };
@@ -48,8 +50,9 @@ export function SectionChatList({ setId }) {
       {isOpen && (
         <Modal isOpen={isOpen} onClose={closeModal}>
           <div className={styles.modalForm}>
-            <p>Введите имя пользователя</p>
+            <label htmlFor={userNameInputId}>Введите имя пользователя</label>
             <input
+              id={userNameInputId}
               className={styles.inputModalForm}
               value={userName}
               onChange={(e) => setUserName(e.currentTarget.value)}

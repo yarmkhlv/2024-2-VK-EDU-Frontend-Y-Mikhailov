@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { convertDateForChatList } from '../../../utils/convertDateForChatList';
+import { convertDate } from '../../../utils/convertDate';
 import styles from './chatItem.module.scss';
 
 export function ChatItem({ name, avatarUrl, messages, onClick }) {
@@ -13,7 +13,7 @@ export function ChatItem({ name, avatarUrl, messages, onClick }) {
           <div className={styles.infoUpperTitle}>{name}</div>
           {lastMessage && (
             <div className={styles.lastMessageStatus}>
-              {convertDateForChatList(lastMessage.date)}
+              {convertDate(lastMessage.date)}
             </div>
           )}
         </div>

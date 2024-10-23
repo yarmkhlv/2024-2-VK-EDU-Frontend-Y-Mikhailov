@@ -1,4 +1,4 @@
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import SearchIcon from '@mui/icons-material/Search';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PropTypes from 'prop-types';
@@ -12,7 +12,7 @@ export function HeaderChat({ avatarUrl, userName, onClickReturn }) {
         <nav className={styles.content}>
           <div className={styles.leftBlock}>
             <button onClick={onClickReturn} className={styles.returnButton}>
-              <ArrowBackIosIcon sx={{ color: '#837d7d' }} />
+              <ArrowBackIosNewIcon sx={{ color: '#837d7d' }} />
             </button>
           </div>
           <div className={styles.middleBlock}>

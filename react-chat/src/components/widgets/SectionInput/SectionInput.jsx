@@ -8,8 +8,9 @@ export function SectionInput({ id, setActualMessages }) {
   const [textMessage, setTextMessage] = useState('');
 
   const recordNewMessage = () => {
+    const trimmedText = textMessage.trim();
     const newMessage = {
-      text: textMessage,
+      text: trimmedText,
       date: new Date().toISOString(),
       owner: 'me',
     };
@@ -61,7 +62,9 @@ export function SectionInput({ id, setActualMessages }) {
             autoComplete="off"
           />
           <button className={styles.submitBtn} type="submit">
-            <SendIcon sx={{ color: '#837d7d' }} />
+            <SendIcon
+              sx={{ color: '#837d7d', '&:hover': { color: '#007bff' } }}
+            />
           </button>
         </form>
       </div>

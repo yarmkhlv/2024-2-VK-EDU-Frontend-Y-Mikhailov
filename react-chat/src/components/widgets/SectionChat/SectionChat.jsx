@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import styles from './sectionChat.module.scss';
 import PropTypes from 'prop-types';
-import { convertDateForChatList } from '../../../utils/convertDateForChatList';
+import { convertDate } from '../../../utils/convertDate';
 
 export function SectionChat({ messages }) {
   const renderMessages = messages.map((item, id) => (
@@ -14,9 +14,7 @@ export function SectionChat({ messages }) {
       )}
     >
       {item.text}
-      <span className={styles.timeMessage}>
-        {convertDateForChatList(item.date)}
-      </span>
+      <span className={styles.timeMessage}>{convertDate(item.date)}</span>
     </div>
   ));
 
