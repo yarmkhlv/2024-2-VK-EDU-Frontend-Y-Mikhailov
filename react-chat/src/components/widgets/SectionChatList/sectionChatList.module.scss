@@ -63,40 +63,6 @@
       outline: var(--accessibility-outline);
     }
   }
-
-  .modalForm {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-
-    row-gap: 20px;
-  }
-
-  .inputModalForm {
-    border: 1px solid black;
-    border-radius: 8px;
-    height: 40px;
-    width: 80%;
-    padding: 10px;
-  }
-
-  .btnBlockModal {
-    display: flex;
-    column-gap: 20px;
-  }
-
-  .btnAtFormModal {
-    border: 1px solid;
-    padding: 15px;
-    border-radius: 5px;
-
-    transition: transform 0.3s;
-
-    &:hover {
-      transform: scale(1.1);
-    }
-  }
 }
 
 @-webkit-keyframes pulse {

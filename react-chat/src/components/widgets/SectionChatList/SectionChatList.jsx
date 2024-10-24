@@ -1,17 +1,9 @@
-import { useState, useId } from 'react';
 import { ChatItem } from '../ChatItem/ChatItem';
 import EditIcon from '@mui/icons-material/Edit';
 import styles from './sectionChatList.module.scss';
-import { createNewChat } from './helpers/createNewChat';
-import { useModal } from '../../../utils/hooks/useModal';
-import { Modal } from '../../shared/Modal/Modal';
 import PropTypes from 'prop-types';
 
-export function SectionChatList({ setId }) {
-  const { isOpen, openModal, closeModal } = useModal();
-  const [userName, setUserName] = useState('');
-  const userNameInputId = useId();
-
+export function SectionChatList({ setId, openModal }) {
   const usersFromLocalStorage = JSON.parse(localStorage.getItem('users')) || [];
 
   const renderChatUsers = usersFromLocalStorage.map((userData) => {
@@ -26,17 +18,6 @@ export function SectionChatList({ setId }) {
     );
   });
 
-  const handleClickBtnCreate = () => {
-    const trimmedUserName = userName.trim();
-    createNewChat(trimmedUserName);
-    setUserName('');
-    closeModal();
-  };
-  const handleClickBtnClose = () => {
-    setUserName('');
-    closeModal();
-  };
-
   return (
     <section className={styles.section} tabIndex="-1">
       <div className={styles.container}>
@@ -47,38 +28,11 @@ export function SectionChatList({ setId }) {
           </button>
         </div>
       </div>
-      {isOpen && (
-        <Modal isOpen={isOpen} onClose={closeModal}>
-          <div className={styles.modalForm}>
-            <label htmlFor={userNameInputId}>Введите имя пользователя</label>
-            <input
-              id={userNameInputId}
-              className={styles.inputModalForm}
-              value={userName}
-              onChange={(e) => setUserName(e.currentTarget.value)}
-              type="text"
-            />
-            <div className={styles.btnBlockModal}>
-              <button
-                className={styles.btnAtFormModal}
-                onClick={handleClickBtnCreate}
-              >
-                Создать
-              </button>
-              <button
-                className={styles.btnAtFormModal}
-                onClick={handleClickBtnClose}
-              >
-                Закрыть
-              </button>
-            </div>
-          </div>
-        </Modal>
-      )}
     </section>
   );
 }
 
 SectionChatList.propTypes = {
   setId: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };

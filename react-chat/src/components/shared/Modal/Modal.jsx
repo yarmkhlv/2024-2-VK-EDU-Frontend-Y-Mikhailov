@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 import { useEffect } from 'react';
@@ -18,12 +19,13 @@ export const Modal = ({ isOpen, onClose, children }) => {
 
   if (!isOpen) return null;
 
-  return (
+  return ReactDOM.createPortal(
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

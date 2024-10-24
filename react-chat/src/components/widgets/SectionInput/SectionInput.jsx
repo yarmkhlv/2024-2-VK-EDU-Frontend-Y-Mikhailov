@@ -1,14 +1,13 @@
-import { useState } from 'react';
+import { useRef } from 'react';
 import { updMessagesAtLocalStorage, makeAnswerMessage } from './helpers';
 import styles from './sectionInput.module.scss';
 import SendIcon from '@mui/icons-material/Send';
 import PropTypes from 'prop-types';
 
 export function SectionInput({ id, setActualMessages }) {
-  const [textMessage, setTextMessage] = useState('');
-
+  const inputRef = useRef(null);
   const recordNewMessage = () => {
-    const trimmedText = textMessage.trim();
+    const trimmedText = inputRef.current.value.trim();
     const newMessage = {
       text: trimmedText,
       date: new Date().toISOString(),
@@ -34,13 +33,12 @@ export function SectionInput({ id, setActualMessages }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (textMessage.trim() === '') return;
+    if (!inputRef?.current?.value) return;
 
     recordNewMessage();
     recordNewMessageFromAnotherUser();
 
-    setTextMessage('');
+    inputRef.current.value = '';
   };
 
   return (
@@ -52,8 +50,7 @@ export function SectionInput({ id, setActualMessages }) {
           action="/"
         >
           <input
-            value={textMessage}
-            onChange={(e) => setTextMessage(e.currentTarget.value)}
+            ref={inputRef}
             className={styles.input}
             name="message-text"
             placeholder="Введите сообщение"
