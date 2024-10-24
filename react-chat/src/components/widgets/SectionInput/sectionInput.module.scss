@@ -31,5 +31,15 @@
 }
 
 .submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    svg {
+      color: #007bff;
+    }
+  }
+
   padding: 8px;
 }

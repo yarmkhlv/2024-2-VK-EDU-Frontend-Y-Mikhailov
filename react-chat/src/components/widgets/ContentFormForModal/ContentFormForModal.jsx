@@ -8,9 +8,7 @@ export function ContentFormForModal({ closeModal }) {
   const inputRef = useRef(null);
 
   const handleClickBtnCreate = () => {
-    const value = inputRef?.current?.value;
-    if (!value) return;
-    const trimmedUserName = value.trim();
+    const trimmedUserName = inputRef.current.value.trim();
     if (!trimmedUserName) {
       inputRef.current.value = '';
       return;
@@ -20,9 +18,7 @@ export function ContentFormForModal({ closeModal }) {
     closeModal();
   };
   const handleClickBtnClose = () => {
-    if (inputRef?.current?.value) {
-      inputRef.current.value = '';
-    }
+    inputRef.current.value = '';
     closeModal();
   };
   const handleKeyDown = (e) => {
@@ -35,6 +31,7 @@ export function ContentFormForModal({ closeModal }) {
     <div className={styles.modalForm}>
       <label htmlFor={userNameInputId}>Введите имя пользователя</label>
       <input
+        autoFocus
         id={userNameInputId}
         ref={inputRef}
         className={styles.inputModalForm}

@@ -33,7 +33,8 @@ export function SectionInput({ id, setActualMessages }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!inputRef?.current?.value) return;
+
+    if (!inputRef.current.value.trim()) return;
 
     recordNewMessage();
     recordNewMessageFromAnotherUser();
@@ -59,9 +60,7 @@ export function SectionInput({ id, setActualMessages }) {
             autoComplete="off"
           />
           <button className={styles.submitBtn} type="submit">
-            <SendIcon
-              sx={{ color: '#837d7d', '&:hover': { color: '#007bff' } }}
-            />
+            <SendIcon sx={{ color: '#837d7d' }} />
           </button>
         </form>
       </div>

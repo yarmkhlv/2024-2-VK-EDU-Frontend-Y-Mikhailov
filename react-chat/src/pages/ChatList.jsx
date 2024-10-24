@@ -1,5 +1,4 @@
 import { Modal } from '../components/shared/Modal/Modal';
-import { InertWrapper } from '../components/shared/InertWrapper/InertWrapper';
 import { HeaderChatList } from '../components/widgets/HeaderChatList/HeaderChatList';
 import { SectionChatList } from '../components/widgets/SectionChatList/SectionChatList';
 import { ContentFormForModal } from '../components/widgets/ContentFormForModal/ContentFormForModal';
@@ -12,12 +11,10 @@ export function ChatList({ setId }) {
 
   return (
     <>
-      <InertWrapper enabled={isOpen}>
-        <HeaderChatList />
-        <main className="main">
-          <SectionChatList openModal={openModal} setId={setId} />
-        </main>
-      </InertWrapper>
+      <HeaderChatList />
+      <main className="main">
+        <SectionChatList openModal={openModal} setId={setId} />
+      </main>
       {isOpen && (
         <Modal isOpen={isOpen} onClose={closeModal}>
           <ContentFormForModal closeModal={closeModal} />

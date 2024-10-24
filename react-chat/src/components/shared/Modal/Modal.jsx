@@ -6,14 +6,19 @@ import styles from './modal.module.scss';
 
 export const Modal = ({ isOpen, onClose, children }) => {
   useEffect(() => {
+    const root = document.getElementById('root');
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      root.inert = true;
     } else {
       document.body.style.overflow = '';
+      root.inert = false;
     }
 
     return () => {
       document.body.style.overflow = '';
+      const root = document.getElementById('root');
+      root.inert = false;
     };
   }, [isOpen]);
 
