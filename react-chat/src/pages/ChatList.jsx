@@ -4,16 +4,14 @@ import { SectionChatList } from '../components/widgets/SectionChatList/SectionCh
 import { ContentFormForModal } from '../components/widgets/ContentFormForModal/ContentFormForModal';
 import { useModal } from '../utils/hooks/useModal';
 
-import PropTypes from 'prop-types';
-
-export function ChatList({ setId }) {
+export function ChatList() {
   const { isOpen, openModal, closeModal } = useModal();
 
   return (
     <>
       <HeaderChatList />
       <main className="main">
-        <SectionChatList openModal={openModal} setId={setId} />
+        <SectionChatList openModal={openModal} />
       </main>
       {isOpen && (
         <Modal isOpen={isOpen} onClose={closeModal}>
@@ -23,7 +21,3 @@ export function ChatList({ setId }) {
     </>
   );
 }
-
-ChatList.propTypes = {
-  setId: PropTypes.func.isRequired,
-};

@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 
@@ -9,9 +11,9 @@ export function HeaderChatList() {
       <div className={styles.container}>
         <nav className={styles.content}>
           <div className={styles.leftBlock}>
-            <button className={styles.menuButton}>
+            <Link to="/editprofile" className={styles.menuButton}>
               <MenuIcon sx={{ color: '#837d7d' }} />
-            </button>
+            </Link>
           </div>
           <div className={styles.middleBlock}>
             <p className={styles.chatListText}>Список чатов</p>
