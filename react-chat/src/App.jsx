@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { ChatList } from './pages/ChatList';
 import { Chat } from './pages/Chat';
 
@@ -9,13 +9,13 @@ function App() {
   const usersFromLocalStorage = JSON.parse(localStorage.getItem('users')) || [];
 
   return (
-    <Router>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<ChatList users={usersFromLocalStorage} />} />
         <Route path="/chat/:userId" element={<Chat />} />
         <Route path="/editprofile" element={<EditProfile />} />
       </Routes>
-    </Router>
+    </HashRouter>
   );
 }
 
