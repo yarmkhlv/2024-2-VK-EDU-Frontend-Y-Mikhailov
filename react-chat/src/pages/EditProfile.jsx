@@ -34,7 +34,7 @@ export function EditProfile() {
           trimmedLastNameLength > 0 &&
           trimmedLastNameLength <= VALID_LENGTH_LAST_NAME;
         const isValidUserName =
-          trimmedUserNameLength > 0 &&
+          trimmedUserNameLength > 4 &&
           trimmedUserNameLength <= VALID_LENGTH_USER_NAME;
         const isValidBio =
           trimmedBioLength > 0 && trimmedBioLength <= VALID_LENGTH_BIO;
