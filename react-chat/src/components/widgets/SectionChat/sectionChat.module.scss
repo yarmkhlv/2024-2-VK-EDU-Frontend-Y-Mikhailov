@@ -5,6 +5,8 @@
   flex: 1;
   overflow-y: auto;
 
+  display: flex;
+
   background-color: var(--color-background-chat);
 
   &::-webkit-scrollbar {
@@ -12,10 +14,18 @@
   }
 
   .container {
+    flex-grow: 1;
+
     max-width: 700px;
     margin: 0 auto;
   }
+  .emptyInfoMessage {
+    flex-grow: 1;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .messagesList {
     display: flex;
     flex-direction: column;

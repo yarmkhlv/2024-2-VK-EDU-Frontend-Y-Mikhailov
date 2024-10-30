@@ -7,7 +7,7 @@ import styles from './chatItem.module.scss';
 export function ChatItem({ name, avatarUrl, messages, id }) {
   const lastMessage = messages[messages.length - 1];
   return (
-    <Link to={`/chat/:${id}`} tabIndex="-1">
+    <Link to={`/chat/:${id}`} className={styles.link}>
       <div className={styles.user}>
         <img
           className={styles.userImg}

@@ -1,7 +1,8 @@
 const DEFAULT_PROFILE = {
   imgUrl: '',
-  fullName: '',
-  userName: '',
+  first_name: '',
+  full_name: '',
+  username: '',
   bio: '',
 };
 

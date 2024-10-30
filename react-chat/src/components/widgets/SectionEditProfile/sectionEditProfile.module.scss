@@ -1,3 +1,5 @@
+@use '../../../styles/base/variables.scss' as *;
+
 .section {
   flex-grow: 1;
 }
@@ -24,6 +26,7 @@
   width: 100%;
 
   .fieldName {
+    display: inline-block;
     margin-bottom: 5px;
   }
 
@@ -37,14 +40,27 @@
     background-color: #f0f0f3;
 
     font-size: 18px;
-    outline: none;
+
+    &:hover {
+      outline: 2px solid var(--accessibility-outline-transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accessibility-outline);
+    }
   }
 
-  .errorText {
+  .errorText,
+  .recommendText {
     position: absolute;
 
-    color: red;
     font-size: 12px;
+  }
+  .errorText {
+    color: red;
+  }
+  .recommendText {
+    color: var(--color-gray-strong);
   }
 
   .textarea {

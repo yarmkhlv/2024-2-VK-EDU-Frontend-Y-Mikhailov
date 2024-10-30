@@ -10,7 +10,11 @@
   --color-chat-name: #0d1217;
   --color-neutral: #686a8a;
 
+  --color-gray: #e3e3e3;
+  --color-gray-strong: #837d7d;
+
   --header-height: 56px;
 
-  --accessibility-outline: rgb(96, 107, 207) solid;
+  --accessibility-outline-transparent: rgba(96, 107, 207, 0.7);
+  --accessibility-outline: rgb(96, 107, 207);
 }
