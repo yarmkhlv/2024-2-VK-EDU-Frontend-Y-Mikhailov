@@ -28,7 +28,7 @@ export function SectionEditProfile({
         />
         <div className={styles.fieldContainer}>
           <label htmlFor={nameInputId} className={styles.fieldName}>
-            Имя
+            Имя*
           </label>
           <input
             id={nameInputId}
@@ -46,7 +46,7 @@ export function SectionEditProfile({
         </div>
         <div className={styles.fieldContainer}>
           <label htmlFor={fioInputId} className={styles.fieldName}>
-            Фамилия
+            Фамилия*
           </label>
           <input
             id={fioInputId}
@@ -64,7 +64,7 @@ export function SectionEditProfile({
         </div>
         <div className={styles.fieldContainer}>
           <label htmlFor={userNameInputId} className={styles.fieldName}>
-            Имя пользователя
+            Имя пользователя*
           </label>
           <input
             id={userNameInputId}

@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  row-gap: 20px;
+  row-gap: 12px;
 }
 
 .img {
@@ -30,14 +30,27 @@
     margin-bottom: 5px;
   }
 
-  .input {
+  .errorText,
+  .recommendText {
+    margin-top: 4px;
+
+    font-size: 12px;
+  }
+  .errorText {
+    color: red;
+  }
+  .recommendText {
+    color: var(--color-gray-strong);
+  }
+
+  .input,
+  .textarea {
     width: 100%;
-    height: 56px;
     padding: 8px;
 
     border-radius: 8px;
-
     background-color: #f0f0f3;
+    outline: none;
 
     font-size: 18px;
 
@@ -49,29 +62,27 @@
       outline: 2px solid var(--accessibility-outline);
     }
   }
-
-  .errorText,
-  .recommendText {
-    position: absolute;
-
-    font-size: 12px;
+  .input {
+    height: 56px;
   }
-  .errorText {
-    color: red;
-  }
-  .recommendText {
-    color: var(--color-gray-strong);
-  }
-
   .textarea {
     resize: none;
-
-    width: 100%;
-    padding: 8px;
-
-    font-size: 18px;
-    border-radius: 8px;
-    outline: none;
-    background-color: #f0f0f3;
   }
 }
+
+// Заготовка на будущее, мб использую
+// .newError {
+//   max-height: 0;
+//   opacity: 0;
+//   visibility: hidden;
+//   overflow: hidden;
+//   color: red;
+//   transition:
+//     max-height 1s ease,
+//     opacity 1s ease;
+// }
+// .newError.active {
+//   max-height: 100px;
+//   visibility: visible;
+//   opacity: 1;
+// }

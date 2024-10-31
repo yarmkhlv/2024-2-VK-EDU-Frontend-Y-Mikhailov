@@ -5,11 +5,13 @@ import { SectionEditProfile } from '../components/widgets/SectionEditProfile/Sec
 import { getProfileFromLS } from '../utils/getProfileFromLS';
 import { delay } from '../utils/delay';
 import {
-  VALID_LENGTH_FIRST_NAME,
-  VALID_LENGTH_LAST_NAME,
-  VALID_LENGTH_USER_NAME,
-  VALID_LENGTH_BIO,
+  MIN_VALID_LENGTH_USER_NAME,
+  MAX_VALID_LENGTH_FIRST_NAME,
+  MAX_VALID_LENGTH_LAST_NAME,
+  MAX_VALID_LENGTH_USER_NAME,
+  MAX_VALID_LENGTH_BIO,
 } from '../utils/variables';
+import { validateField } from '../utils/validateField';
 
 export function EditProfile() {
   const profileInfo = getProfileFromLS();
@@ -23,55 +25,60 @@ export function EditProfile() {
   const validateFields = async () => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const trimmedFirstNameLength = firstName.trim().length;
-        const trimmedLastNameLength = lastName.trim().length;
-        const trimmedUserNameLength = userName.trim().length;
-        const trimmedBioLength = bio.trim().length;
-        const isValidFirstName =
-          trimmedFirstNameLength > 0 &&
-          trimmedFirstNameLength <= VALID_LENGTH_FIRST_NAME;
-        const isValidLastName =
-          trimmedLastNameLength > 0 &&
-          trimmedLastNameLength <= VALID_LENGTH_LAST_NAME;
-        const isValidUserName =
-          trimmedUserNameLength > 4 &&
-          trimmedUserNameLength <= VALID_LENGTH_USER_NAME;
-        const isValidBio =
-          trimmedBioLength > 0 && trimmedBioLength <= VALID_LENGTH_BIO;
+        const textErrorFirstName = validateField(
+          firstName,
+          null,
+          MAX_VALID_LENGTH_FIRST_NAME,
+          true
+        );
+        const textErrorLastName = validateField(
+          lastName,
+          null,
+          MAX_VALID_LENGTH_LAST_NAME,
+          true
+        );
+        const textErrorUserName = validateField(
+          userName,
+          MIN_VALID_LENGTH_USER_NAME,
+          MAX_VALID_LENGTH_USER_NAME,
+          true
+        );
+        const textErrorBio = validateField(
+          bio,
+          null,
+          MAX_VALID_LENGTH_BIO,
+          false
+        );
         if (
-          isValidFirstName &&
-          isValidLastName &&
-          isValidUserName &&
-          isValidBio
+          !textErrorFirstName &&
+          !textErrorLastName &&
+          !textErrorUserName &&
+          !textErrorBio
         ) {
           resolve(true);
         } else {
-          if (!isValidUserName) {
+          if (textErrorUserName) {
             setErrors((prev) => ({
               ...prev,
-              userNameErrText:
-                'Имя пользователя должно быть больше 4 символов и не более 150',
+              userNameErrText: textErrorUserName,
             }));
           }
-          if (!isValidFirstName) {
+          if (textErrorFirstName) {
             setErrors((prev) => ({
               ...prev,
-              firstNameErrText:
-                'Имя  должно состоять минимум из 1 символа и не более 150',
+              firstNameErrText: textErrorFirstName,
             }));
           }
-          if (!isValidLastName) {
+          if (textErrorUserName) {
             setErrors((prev) => ({
               ...prev,
-              lastNameErrText:
-                'Фамилия  должна состоять минимум из 1 символа и не более 150',
+              lastNameErrText: textErrorLastName,
             }));
           }
-          if (!isValidBio) {
+          if (textErrorBio) {
             setErrors((prev) => ({
               ...prev,
-              bioErrText:
-                'Биография должна состоять минимум из 1 символа и не более 450',
+              bioErrText: textErrorBio,
             }));
           }
           reject(false);
