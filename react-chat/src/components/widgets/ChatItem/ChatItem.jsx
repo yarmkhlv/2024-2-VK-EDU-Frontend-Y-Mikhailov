@@ -1,34 +1,41 @@
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { convertDate } from '../../../utils/convertDate';
 import styles from './chatItem.module.scss';
 
-export function ChatItem({ name, avatarUrl, messages, onClick }) {
+export function ChatItem({ name, avatarUrl, messages, id }) {
   const lastMessage = messages[messages.length - 1];
   return (
-    <div onClick={onClick} className={styles.user}>
-      <img className={styles.userImg} src={avatarUrl} alt={`${name} аватар`} />
-      <div className={styles.userInfo}>
-        <div className={styles.userInfoUpper}>
-          <div className={styles.infoUpperTitle}>{name}</div>
+    <Link to={`/chat/:${id}`} className={styles.link}>
+      <div className={styles.user}>
+        <img
+          className={styles.userImg}
+          src={avatarUrl}
+          alt="Изображение профиля"
+        />
+        <div className={styles.userInfo}>
+          <div className={styles.userInfoUpper}>
+            <div className={styles.infoUpperTitle}>{name}</div>
+            {lastMessage && (
+              <div className={styles.lastMessageStatus}>
+                {convertDate(lastMessage.date)}
+              </div>
+            )}
+          </div>
           {lastMessage && (
-            <div className={styles.lastMessageStatus}>
-              {convertDate(lastMessage.date)}
-            </div>
+            <div className={styles.userInfoBottom}>{lastMessage.text}</div>
           )}
         </div>
-        {lastMessage && (
-          <div className={styles.userInfoBottom}>{lastMessage.text}</div>
-        )}
       </div>
-    </div>
+    </Link>
   );
 }
 
 ChatItem.propTypes = {
   name: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
   avatarUrl: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired,
   messages: PropTypes.arrayOf(
     PropTypes.shape({
       text: PropTypes.string,

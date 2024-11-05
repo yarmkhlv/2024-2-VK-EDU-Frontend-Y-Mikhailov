@@ -1,28 +1,23 @@
-import { useState } from 'react';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import { ChatList } from './pages/ChatList';
 import { Chat } from './pages/Chat';
+import { Error } from './pages/Error';
 
 import './App.css';
+import { EditProfile } from './pages/EditProfile';
 
 function App() {
-  const [currentSelectedId, setCurrentSelectedId] = useState(null);
   const usersFromLocalStorage = JSON.parse(localStorage.getItem('users')) || [];
-  const findedUser = usersFromLocalStorage.find(
-    (user) => user.id === currentSelectedId
-  );
-
-  const handleReturnToList = () => {
-    setCurrentSelectedId(null);
-  };
 
   return (
-    <>
-      {findedUser ? (
-        <Chat user={findedUser} onClickReturn={handleReturnToList} />
-      ) : (
-        <ChatList setId={setCurrentSelectedId} users={usersFromLocalStorage} />
-      )}
-    </>
+    <HashRouter>
+      <Routes>
+        <Route path="/*" element={<Error />} />
+        <Route path="/" element={<ChatList users={usersFromLocalStorage} />} />
+        <Route path="/chat/:userId" element={<Chat />} />
+        <Route path="/editprofile" element={<EditProfile />} />
+      </Routes>
+    </HashRouter>
   );
 }
 

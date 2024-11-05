@@ -1,6 +1,10 @@
 @use '../../../styles/base/breakpoints.scss' as *;
 @use '../../../styles/base/variables.scss' as *;
 
+.link:focus-visible {
+  display: block;
+}
+
 .user {
   display: flex;
   column-gap: 8px;
@@ -8,7 +12,7 @@
   padding: 9px;
 
   &:hover {
-    background-color: #e3e3e3;
+    background-color: var(--color-gray);
     transition: background-color 0.5s ease;
   }
 }
@@ -51,10 +55,3 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-// .user-chat__status {
-//   margin-left: auto;
-
-//   display: flex;
-//   flex-direction: column;
-// }

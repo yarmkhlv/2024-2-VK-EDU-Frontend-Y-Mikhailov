@@ -1,0 +1,88 @@
+@use '../../../styles/base/variables.scss' as *;
+
+.section {
+  flex-grow: 1;
+}
+
+.container {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 12px;
+}
+
+.img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.fieldContainer {
+  position: relative;
+  width: 100%;
+
+  .fieldName {
+    display: inline-block;
+    margin-bottom: 5px;
+  }
+
+  .errorText,
+  .recommendText {
+    margin-top: 4px;
+
+    font-size: 12px;
+  }
+  .errorText {
+    color: red;
+  }
+  .recommendText {
+    color: var(--color-gray-strong);
+  }
+
+  .input,
+  .textarea {
+    width: 100%;
+    padding: 8px;
+
+    border-radius: 8px;
+    background-color: #f0f0f3;
+    outline: none;
+
+    font-size: 18px;
+
+    &:hover {
+      outline: 2px solid var(--accessibility-outline-transparent);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--accessibility-outline);
+    }
+  }
+  .input {
+    height: 56px;
+  }
+  .textarea {
+    resize: none;
+  }
+}
+
+// Заготовка на будущее, мб использую
+// .newError {
+//   max-height: 0;
+//   opacity: 0;
+//   visibility: hidden;
+//   overflow: hidden;
+//   color: red;
+//   transition:
+//     max-height 1s ease,
+//     opacity 1s ease;
+// }
+// .newError.active {
+//   max-height: 100px;
+//   visibility: visible;
+//   opacity: 1;
+// }

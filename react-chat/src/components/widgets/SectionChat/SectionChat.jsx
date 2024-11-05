@@ -20,9 +20,13 @@ export function SectionChat({ messages }) {
 
   return (
     <section id="sectionChat" className={styles.section} tabIndex="-1">
-      <div className={styles.container}>
-        <div className={styles.messagesList}>{renderMessages}</div>
-      </div>
+      {renderMessages.length < 1 ? (
+        <div className={styles.emptyInfoMessage}>Пока сообщений нет</div>
+      ) : (
+        <div className={styles.container}>
+          <div className={styles.messagesList}>{renderMessages}</div>
+        </div>
+      )}
     </section>
   );
 }

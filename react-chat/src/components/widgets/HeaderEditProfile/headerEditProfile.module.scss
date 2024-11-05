@@ -1,4 +1,6 @@
 @use '../../../styles/base/breakpoints.scss' as *;
+@use '../../../styles/base/variables.scss' as *;
+
 .header {
   height: var(--header-height);
 
@@ -33,30 +35,24 @@
   display: flex;
   align-items: center;
 
-  column-gap: 10px;
-
   @include tablet {
     margin-right: auto;
   }
 
-  .chatListText {
+  .editProfileText {
     font-size: 18px;
     font-weight: 500;
   }
 }
 
-.rightBlock {
-  display: flex;
-  column-gap: 20px;
-}
-
-.menuButton,
-.searchButton {
+.doneButton,
+.returnButton {
   position: relative;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
   padding: 8px;
 
   &::before {

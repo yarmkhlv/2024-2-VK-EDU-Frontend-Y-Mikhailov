@@ -2,7 +2,7 @@
   "name": "react-chat",
   "private": true,
   "version": "1.0.0",
-  "homepage": "https://<username>.github.io/2024-2-VK-EDU-Frontend-Y-Mikhailov/",
+  "homepage": "https://yarmkhlv.github.io/2024-2-VK-EDU-Frontend-Y-Mikhailov/",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -18,6 +18,7 @@
     "lorem-ipsum": "^2.0.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0",
     "sass": "^1.80.3"
   },
   "devDependencies": {

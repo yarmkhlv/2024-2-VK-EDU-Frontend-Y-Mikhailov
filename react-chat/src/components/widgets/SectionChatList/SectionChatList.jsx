@@ -3,19 +3,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import styles from './sectionChatList.module.scss';
 import PropTypes from 'prop-types';
 
-export function SectionChatList({ setId, openModal }) {
+export function SectionChatList({ openModal }) {
   const usersFromLocalStorage = JSON.parse(localStorage.getItem('users')) || [];
 
   const renderChatUsers = usersFromLocalStorage.map((userData) => {
-    return (
-      <ChatItem
-        key={userData.id}
-        onClick={() => {
-          setId(userData.id);
-        }}
-        {...userData}
-      />
-    );
+    return <ChatItem key={userData.id} {...userData} />;
   });
 
   return (
@@ -33,6 +25,5 @@ export function SectionChatList({ setId, openModal }) {
 }
 
 SectionChatList.propTypes = {
-  setId: PropTypes.func.isRequired,
   openModal: PropTypes.func.isRequired,
 };

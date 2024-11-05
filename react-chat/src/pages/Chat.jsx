@@ -1,12 +1,19 @@
+import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { HeaderChat } from '../components/widgets/HeaderChat/HeaderChat';
 import { SectionChat } from '../components/widgets/SectionChat/SectionChat';
 import { SectionInput } from '../components/widgets/SectionInput/SectionInput';
-import PropTypes from 'prop-types';
 import { scrollToBottom } from '../utils/scrollToBottom';
 
-export function Chat({ user, onClickReturn }) {
-  const { id, name, avatarUrl, messages } = user;
+export function Chat() {
+  const { userId } = useParams();
+  const correctedUserId = Number(userId.slice(1));
+  const usersFromLocalStorage = JSON.parse(localStorage.getItem('users')) || [];
+  const findedUser = usersFromLocalStorage.find(
+    (user) => user.id === correctedUserId
+  );
+
+  const { id, name, avatarUrl, messages } = findedUser;
   const [actualMessages, setActualMessages] = useState(messages);
 
   useEffect(() => {
@@ -15,11 +22,7 @@ export function Chat({ user, onClickReturn }) {
 
   return (
     <>
-      <HeaderChat
-        avatarUrl={avatarUrl}
-        userName={name}
-        onClickReturn={onClickReturn}
-      />
+      <HeaderChat avatarUrl={avatarUrl} userName={name} />
       <main className="main">
         <SectionChat messages={actualMessages} />
         <SectionInput id={id} setActualMessages={setActualMessages} />
@@ -27,21 +30,3 @@ export function Chat({ user, onClickReturn }) {
     </>
   );
 }
-
-const messageShape = PropTypes.shape({
-  text: PropTypes.string.isRequired,
-  date: PropTypes.string.isRequired,
-  owner: PropTypes.string.isRequired,
-});
-
-const userShape = PropTypes.shape({
-  id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  avatarUrl: PropTypes.string.isRequired,
-  messages: PropTypes.arrayOf(messageShape),
-});
-
-Chat.propTypes = {
-  user: userShape,
-  onClickReturn: PropTypes.func.isRequired,
-};
