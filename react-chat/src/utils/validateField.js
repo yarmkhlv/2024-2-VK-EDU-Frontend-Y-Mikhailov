@@ -1,4 +1,4 @@
-export function validateField(fieldValue, minLength, maxLength, required) {
+export function validateField(fieldValue, required, minLength, maxLength) {
   const trimmedFieldValueLength = fieldValue.trim().length;
   if (required && !trimmedFieldValueLength) {
     return 'Поле обязательно к заполнению';

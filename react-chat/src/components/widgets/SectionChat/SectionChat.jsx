@@ -1,22 +1,30 @@
 import clsx from 'clsx';
 import styles from './sectionChat.module.scss';
-import PropTypes from 'prop-types';
-import { convertDate } from '../../../utils/convertDate';
+import { PrivateMessage } from './ui/PrivateMessage/PrivateMessage';
+import { GeneralMessage } from './ui/GeneralMessage/GeneralMessage';
 
-export function SectionChat({ messages }) {
-  const renderMessages = messages.map((item, id) => (
-    <div
-      key={id}
-      className={clsx(
-        styles.message,
-        item.owner === 'me' ? styles.ownMessage : styles.anotherPersonsMessage,
-        item.labelNew && styles.newMessage
-      )}
-    >
-      {item.text}
-      <span className={styles.timeMessage}>{convertDate(item.date)}</span>
-    </div>
-  ));
+export function SectionChat({
+  messages,
+  isPrivateType,
+  currentUserId,
+  messagesContainerRef,
+  handleScrollMessages,
+}) {
+  const renderMessages = messages.map((item) =>
+    isPrivateType ? (
+      <PrivateMessage
+        key={item.id}
+        currentUserId={currentUserId}
+        messageData={item}
+      />
+    ) : (
+      <GeneralMessage
+        key={item.id}
+        currentUserId={currentUserId}
+        messageData={item}
+      />
+    )
+  );
 
   return (
     <section id="sectionChat" className={styles.section} tabIndex="-1">
@@ -24,19 +32,18 @@ export function SectionChat({ messages }) {
         <div className={styles.emptyInfoMessage}>Пока сообщений нет</div>
       ) : (
         <div className={styles.container}>
-          <div className={styles.messagesList}>{renderMessages}</div>
+          <div
+            onScroll={handleScrollMessages}
+            ref={messagesContainerRef}
+            className={clsx(
+              styles.messagesList,
+              !isPrivateType && styles.notPrivate
+            )}
+          >
+            {renderMessages}
+          </div>
         </div>
       )}
     </section>
   );
 }
-
-SectionChat.propTypes = {
-  messages: PropTypes.arrayOf(
-    PropTypes.shape({
-      text: PropTypes.string.isRequired,
-      date: PropTypes.string.isRequired,
-      owner: PropTypes.string.isRequired,
-    })
-  ),
-};

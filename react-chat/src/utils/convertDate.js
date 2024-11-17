@@ -1,5 +1,8 @@
 export function convertDate(dateFormatISO) {
-  const messageTime = new Date(dateFormatISO);
+  if (!dateFormatISO) return;
+  const normalizedDateFormat = dateFormatISO.replace(/\.\d{6}/, '');
+
+  const messageTime = new Date(Date.parse(normalizedDateFormat));
   const today = new Date();
 
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;

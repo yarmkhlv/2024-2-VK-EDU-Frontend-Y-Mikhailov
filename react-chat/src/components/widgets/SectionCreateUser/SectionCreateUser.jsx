@@ -1,26 +1,27 @@
-import { useId, useState, useEffect } from 'react';
-import styles from './sectionEditProfile.module.scss';
+import { useId, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { Loader } from '../../shared/Loader/Loader';
 import { validateField } from '../../../utils/validateField';
 import { MIN_VALID_LENGTH_USER_NAME } from '../../../utils/variables';
-import { useAuth } from '../../providers/helpers/useAuth';
+import styles from './sectionCreateUser.module.scss';
 
-export function SectionEditProfile({ currentUser }) {
-  const { accessToken, refreshAccessToken } = useAuth();
+export function SectionCreateUser() {
+  const navigate = useNavigate();
 
   const avatarInputId = useId();
   const nameInputId = useId();
   const fioInputId = useId();
   const userNameInputId = useId();
+  const passwordInputId = useId();
   const bioTextAreaId = useId();
 
-  const [id, setId] = useState('');
-  const [avatar, setAvatar] = useState('');
-
+  const [avatar, setAvatar] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
   const [bio, setBio] = useState('');
   const [errors, setErrors] = useState({
     first_name: '',
@@ -52,7 +53,7 @@ export function SectionEditProfile({ currentUser }) {
     return true;
   };
 
-  const handleSubmitForm = async (e, retryCount = 1) => {
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
 
     const isValid = validateFields();
@@ -60,22 +61,13 @@ export function SectionEditProfile({ currentUser }) {
     if (!isValid) return;
     setStatusLoading('loading');
     const formData = new FormData();
-    const trimmedFirstName = firstName.trim();
-    const trimmedLastName = lastName.trim();
-    const trimmedUserName = userName.trim();
-    const trimmedBio = bio.trim();
+    formData.append('first_name', firstName.trim());
+    formData.append('last_name', lastName.trim());
+    formData.append('username', userName.trim());
+    formData.append('password', password.trim());
 
-    if (trimmedFirstName !== currentUser.first_name) {
-      formData.append('first_name', trimmedFirstName);
-    }
-    if (trimmedLastName !== currentUser.last_name) {
-      formData.append('last_name', trimmedLastName);
-    }
-    if (trimmedUserName !== currentUser.username) {
-      formData.append('username', trimmedUserName);
-    }
-    if (trimmedBio !== currentUser.bio) {
-      formData.append('bio', trimmedBio);
+    if (bio) {
+      formData.append('bio', bio);
     }
     if (avatar) {
       formData.append('avatar', avatar);
@@ -83,13 +75,10 @@ export function SectionEditProfile({ currentUser }) {
 
     try {
       const response = await fetch(
-        `https://vkedu-fullstack-div2.ru/api/user/${id}`,
+        'https://vkedu-fullstack-div2.ru/api/register/',
         {
-          method: 'PATCH',
+          method: 'POST',
           body: formData,
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
         }
       );
 
@@ -105,14 +94,6 @@ export function SectionEditProfile({ currentUser }) {
             setErrors(formattedErrors);
             setStatusLoading(null);
           }, 1000);
-        }
-        if (response.status === 401 && retryCount > 0) {
-          const newAccessToken = await refreshAccessToken();
-          if (newAccessToken) {
-            return handleSubmitForm(e, retryCount - 1);
-          } else {
-            throw new Error('Unable to refresh access token.');
-          }
         } else {
           throw new Error(`Произошла ошибка ${response.status}`);
         }
@@ -120,13 +101,13 @@ export function SectionEditProfile({ currentUser }) {
         setStatusLoading('done');
         setTimeout(() => {
           setStatusLoading(null);
+          navigate('/');
         }, 1000);
       }
     } catch (error) {
       console.error('Error:', error.message);
     }
   };
-
   const handleChangeAvatar = (e) => {
     clearError('avatar');
     const file = e.target.files[0];
@@ -149,6 +130,10 @@ export function SectionEditProfile({ currentUser }) {
     clearError('username');
     setUserName(e.currentTarget.value);
   };
+  const handleChangePassword = (e) => {
+    clearError('password');
+    setPassword(e.currentTarget.value);
+  };
   const handleChangeBio = (e) => {
     clearError('bio');
     setBio(e.currentTarget.value);
@@ -160,17 +145,6 @@ export function SectionEditProfile({ currentUser }) {
       [fieldName]: '',
     }));
   };
-
-  useEffect(() => {
-    if (currentUser) {
-      setId(currentUser.id || '');
-      setAvatarPreview(currentUser.avatar || '');
-      setFirstName(currentUser.first_name || '');
-      setLastName(currentUser.last_name || '');
-      setUserName(currentUser.username || '');
-      setBio(currentUser.bio || '');
-    }
-  }, [currentUser]);
 
   return (
     <section className={styles.section} tabIndex="-1">
@@ -234,6 +208,24 @@ export function SectionEditProfile({ currentUser }) {
           )}
         </div>
         <div className={styles.fieldContainer}>
+          <label htmlFor={passwordInputId} className={styles.fieldName}>
+            Пароль*
+          </label>
+          <input
+            id={passwordInputId}
+            value={password}
+            className={styles.input}
+            autoComplete="false"
+            name="password"
+            placeholder="Введите пароль"
+            type="password"
+            onChange={handleChangePassword}
+          />
+          {errors.password && (
+            <div className={styles.errorText}>{errors.password}</div>
+          )}
+        </div>
+        <div className={styles.fieldContainer}>
           <label htmlFor={bioTextAreaId} className={styles.fieldName}>
             Биография
           </label>
@@ -274,7 +266,7 @@ export function SectionEditProfile({ currentUser }) {
         </div>
 
         <button className={styles.submitBtn} type="submit">
-          Сохранить изменения
+          Создать аккаунт
         </button>
       </form>
       <Loader status={statusLoading} />

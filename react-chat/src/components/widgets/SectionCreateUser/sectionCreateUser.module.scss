@@ -14,6 +14,7 @@
   align-items: center;
   row-gap: 12px;
 }
+
 .avatarPreview {
   margin: 10px 0px;
   display: flex;
@@ -30,6 +31,13 @@
 .img {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+}
+
+.avatarImage {
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 50%;
   object-fit: cover;
 }
 .fieldContainer {
@@ -86,3 +94,20 @@
   border: 1px solid black;
   border-radius: 5px;
 }
+
+// Заготовка на будущее, мб использую
+// .newError {
+//   max-height: 0;
+//   opacity: 0;
+//   visibility: hidden;
+//   overflow: hidden;
+//   color: red;
+//   transition:
+//     max-height 1s ease,
+//     opacity 1s ease;
+// }
+// .newError.active {
+//   max-height: 100px;
+//   visibility: visible;
+//   opacity: 1;
+// }

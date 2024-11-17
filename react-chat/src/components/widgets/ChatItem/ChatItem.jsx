@@ -1,45 +1,45 @@
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 
 import { convertDate } from '../../../utils/convertDate';
 import styles from './chatItem.module.scss';
 
-export function ChatItem({ name, avatarUrl, messages, id }) {
-  const lastMessage = messages[messages.length - 1];
+export function ChatItem({ title, avatar, last_message, id, is_private }) {
+  const avatarInitials = is_private
+    ? title
+        .split(' ')
+        .map((el) => el[0])
+        .join('')
+    : title[0];
+
   return (
-    <Link to={`/chat/:${id}`} className={styles.link}>
+    <Link to={`/chat/${id}`} className={styles.link}>
       <div className={styles.user}>
-        <img
-          className={styles.userImg}
-          src={avatarUrl}
-          alt="Изображение профиля"
-        />
+        <div className={styles.avatar}>
+          {avatar ? (
+            <img
+              className={styles.userImg}
+              src={avatar}
+              alt="Изображение чата"
+            />
+          ) : (
+            <span className={styles.initials}>{avatarInitials}</span>
+          )}
+        </div>
+
         <div className={styles.userInfo}>
           <div className={styles.userInfoUpper}>
-            <div className={styles.infoUpperTitle}>{name}</div>
-            {lastMessage && (
+            <div className={styles.infoUpperTitle}>{title}</div>
+            {last_message && (
               <div className={styles.lastMessageStatus}>
-                {convertDate(lastMessage.date)}
+                {convertDate(last_message.created_at)}
               </div>
             )}
           </div>
-          {lastMessage && (
-            <div className={styles.userInfoBottom}>{lastMessage.text}</div>
+          {last_message && (
+            <div className={styles.userInfoBottom}>{last_message.text}</div>
           )}
         </div>
       </div>
     </Link>
   );
 }
-
-ChatItem.propTypes = {
-  name: PropTypes.string.isRequired,
-  id: PropTypes.number.isRequired,
-  avatarUrl: PropTypes.string.isRequired,
-  messages: PropTypes.arrayOf(
-    PropTypes.shape({
-      text: PropTypes.string,
-      date: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    })
-  ),
-};

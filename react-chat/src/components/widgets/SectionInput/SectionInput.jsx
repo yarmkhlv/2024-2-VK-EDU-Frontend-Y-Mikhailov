@@ -1,45 +1,54 @@
 import { useRef } from 'react';
-import { updMessagesAtLocalStorage, makeAnswerMessage } from './helpers';
 import styles from './sectionInput.module.scss';
 import SendIcon from '@mui/icons-material/Send';
-import PropTypes from 'prop-types';
+import { useAuth } from '../../providers/helpers/useAuth';
+import { useNavigate } from 'react-router-dom';
 
-export function SectionInput({ id, setActualMessages }) {
+export function SectionInput({ id }) {
+  const navigate = useNavigate();
+  const { accessToken, refreshAccessToken } = useAuth();
   const inputRef = useRef(null);
-  const recordNewMessage = () => {
-    const trimmedText = inputRef.current.value.trim();
-    const newMessage = {
-      text: trimmedText,
-      date: new Date().toISOString(),
-      owner: 'me',
-    };
-    updMessagesAtLocalStorage(id, newMessage);
-    setActualMessages((prevMessages) => [
-      ...prevMessages,
-      { ...newMessage, labelNew: true },
-    ]);
-  };
 
-  const recordNewMessageFromAnotherUser = () => {
-    setTimeout(() => {
-      const anotherUserNewMessage = makeAnswerMessage();
-      updMessagesAtLocalStorage(id, anotherUserNewMessage);
-      setActualMessages((prevMessages) => [
-        ...prevMessages,
-        { ...anotherUserNewMessage, labelNew: true },
-      ]);
-    }, 2000);
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!inputRef.current.value.trim()) return;
-
     recordNewMessage();
-    recordNewMessageFromAnotherUser();
+  };
 
-    inputRef.current.value = '';
+  const recordNewMessage = async (retryCount = 1) => {
+    const trimmedText = inputRef.current.value.trim();
+    if (!trimmedText) return;
+    try {
+      const response = await fetch(
+        `https://vkedu-fullstack-div2.ru/api/messages/`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            text: trimmedText,
+            chat: id,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          const newAccessToken = await refreshAccessToken();
+          if (newAccessToken) {
+            return recordNewMessage(id, retryCount - 1);
+          } else {
+            throw new Error(`Ошибка в создании токена`);
+          }
+        } else throw new Error(`Ошибка ${response.status}`);
+      } else {
+        inputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('Error:', error.message);
+      navigate('/');
+    }
   };
 
   return (
@@ -67,8 +76,3 @@ export function SectionInput({ id, setActualMessages }) {
     </section>
   );
 }
-
-SectionInput.propTypes = {
-  id: PropTypes.number.isRequired,
-  setActualMessages: PropTypes.func.isRequired,
-};

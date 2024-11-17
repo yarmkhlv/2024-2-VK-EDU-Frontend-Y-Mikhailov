@@ -1,17 +1,19 @@
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import DoneIcon from '@mui/icons-material/Done';
+import clsx from 'clsx';
 
 import styles from './headerEditProfile.module.scss';
 
-export function HeaderEditProfile({ saveProfile }) {
+export function HeaderEditProfile({ navigateLink, saveProfile }) {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <nav className={styles.content}>
+        <nav
+          className={clsx(styles.content, !saveProfile && styles.withoutBtn)}
+        >
           <div className={styles.leftBlock}>
-            <Link to="/" className={styles.returnButton}>
+            <Link to={navigateLink || '/'} className={styles.returnButton}>
               <ArrowBackIosNewIcon sx={{ color: '#837d7d' }} />
             </Link>
           </div>
@@ -20,19 +22,15 @@ export function HeaderEditProfile({ saveProfile }) {
               Редактирование пользователя
             </div>
           </div>
-          <div className={styles.rightBlock}>
+          {/* <div className={styles.rightBlock}>
             <div className={styles.doneButtonBlock}>
               <button onClick={saveProfile} className={styles.doneButton}>
                 <DoneIcon sx={{ color: '#837d7d' }} />
               </button>
             </div>
-          </div>
+          </div> */}
         </nav>
       </div>
     </header>
   );
 }
-
-HeaderEditProfile.propTypes = {
-  saveProfile: PropTypes.func.isRequired,
-};

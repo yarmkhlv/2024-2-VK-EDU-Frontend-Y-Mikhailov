@@ -36,8 +36,8 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
-      'react/prop-types': 'warn',
-      'prettier/prettier': 'off', // Отключите Prettier для тестирования
+      'react/prop-types': 'off',
+      'prettier/prettier': 'off',
     },
   },
   prettierConfig,

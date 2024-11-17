@@ -1,0 +1,22 @@
+@use '../../../../../styles/base/breakpoints.scss' as *;
+@use '../../../../../styles/base/variables.scss' as *;
+
+.header {
+  height: var(--header-height);
+  padding: 10px;
+
+  display: flex;
+  align-items: center;
+
+  column-gap: 15px;
+
+  .title {
+    font-size: 18px;
+    font-weight: 500;
+  }
+}
+
+.containerUserList {
+  height: calc(100% - var(--header-height));
+  overflow-y: auto;
+}

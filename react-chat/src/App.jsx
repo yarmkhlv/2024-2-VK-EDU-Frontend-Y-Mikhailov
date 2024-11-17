@@ -5,19 +5,24 @@ import { Error } from './pages/Error';
 
 import './App.css';
 import { EditProfile } from './pages/EditProfile';
+import { CreateUser } from './pages/CreateUser';
+import { Login } from './pages/Login';
+import { AuthProvider } from './components/providers/AuthContextProvider';
 
 function App() {
-  const usersFromLocalStorage = JSON.parse(localStorage.getItem('users')) || [];
-
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/*" element={<Error />} />
-        <Route path="/" element={<ChatList users={usersFromLocalStorage} />} />
-        <Route path="/chat/:userId" element={<Chat />} />
-        <Route path="/editprofile" element={<EditProfile />} />
-      </Routes>
-    </HashRouter>
+    <AuthProvider>
+      <HashRouter>
+        <Routes>
+          <Route path="/chatlist" element={<ChatList />} />
+          <Route path="/chat/:id" element={<Chat />} />
+          <Route path="/editprofile" element={<EditProfile />} />
+          <Route path="/createuser" element={<CreateUser />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/*" element={<Error />} />
+        </Routes>
+      </HashRouter>
+    </AuthProvider>
   );
 }
 
