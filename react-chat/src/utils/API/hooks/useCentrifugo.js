@@ -6,22 +6,28 @@ export function useCentrifugo(currentUser, setMessages, setCountMessages) {
   const { accessToken } = useAuth();
 
   const getConnectionToken = async () => {
-    const response = await fetch('/api/centrifugo/connect/', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    const response = await fetch(
+      'https://vkedu-fullstack-div2.ru/api/centrifugo/connect/',
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      }
+    );
     const data = await response.json();
     return data.token;
   };
 
   const getSubscriptionToken = async () => {
-    const response = await fetch('/api/centrifugo/subscribe/', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(
+      'https://vkedu-fullstack-div2.ru/api/centrifugo/subscribe/',
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
     const data = await response.json();
     return data.token;
   };
