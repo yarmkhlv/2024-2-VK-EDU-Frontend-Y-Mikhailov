@@ -8,6 +8,8 @@ import styles from './sectionChatList.module.scss';
 import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export function SectionChatList({ openModal, setTypeCreateChat }) {
   const navigate = useNavigate();
 
@@ -17,14 +19,11 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const fetchChats = async (retryCount = 1) => {
     try {
-      const response = await fetch(
-        'https://vkedu-fullstack-div2.ru/api/chats/',
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      const response = await fetch(`${API_URL}/chats/`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
       if (!response.ok) {
         if (response.status === 401 && retryCount > 0) {

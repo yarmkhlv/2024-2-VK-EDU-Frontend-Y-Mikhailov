@@ -9,9 +9,9 @@ out/
 coverage/
 
 # Локальные файлы среды
-.env
-.env.local
-.env.*.local
+# .env
+# .env.local
+# .env.*.local
 
 # Файлы конфигураций IDE и редакторов кода
 .vscode/

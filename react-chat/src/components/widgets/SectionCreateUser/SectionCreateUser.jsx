@@ -1,52 +1,66 @@
-import { useId, useState } from 'react';
+import { useId, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-import { Loader } from '../../shared/Loader/Loader';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { validateField } from '../../../utils/validateField';
 import { MIN_VALID_LENGTH_USER_NAME } from '../../../utils/variables';
 import styles from './sectionCreateUser.module.scss';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export function SectionCreateUser() {
   const navigate = useNavigate();
 
-  const avatarInputId = useId();
+  const refAvatarInput = useRef(null);
+
   const nameInputId = useId();
   const fioInputId = useId();
   const userNameInputId = useId();
   const passwordInputId = useId();
   const bioTextAreaId = useId();
 
-  const [avatar, setAvatar] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [bio, setBio] = useState('');
-  const [errors, setErrors] = useState({
-    first_name: '',
-    last_name: '',
+  const [data, setData] = useState({
+    firstname: '',
+    lastname: '',
     username: '',
     password: '',
+    bio: '',
+    avatar: null,
+  });
+
+  const [avatarPreview, setAvatarPreview] = useState('');
+
+  const [errors, setErrors] = useState({
+    firstname: '',
+    lastname: '',
+    username: '',
+    password: '',
+    bio: '',
     avatar: '',
   });
 
-  const [statusLoading, setStatusLoading] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateFields = () => {
-    const textErrorFirstName = validateField(firstName, true);
-    const textErrorLastName = validateField(lastName, true);
+    const textErrorFirstName = validateField(data.firstname, true);
+    const textErrorLastName = validateField(data.lastname, true);
     const textErrorUserName = validateField(
-      userName,
+      data.username,
       true,
       MIN_VALID_LENGTH_USER_NAME
     );
-    if (textErrorFirstName || textErrorLastName || textErrorUserName) {
+    const textErrorPassword = validateField(data.password, true);
+    if (
+      textErrorFirstName ||
+      textErrorLastName ||
+      textErrorUserName ||
+      textErrorPassword
+    ) {
       setErrors((prev) => ({
         ...prev,
-        first_name: textErrorFirstName,
-        last_name: textErrorLastName,
+        firstname: textErrorFirstName,
+        lastname: textErrorLastName,
         username: textErrorUserName,
+        password: textErrorPassword,
       }));
       return false;
     }
@@ -54,33 +68,31 @@ export function SectionCreateUser() {
   };
 
   const handleSubmitForm = async (e) => {
+    if (isLoading) return;
+    setIsLoading(true);
     e.preventDefault();
-
     const isValid = validateFields();
 
     if (!isValid) return;
-    setStatusLoading('loading');
+    setIsLoading(false);
     const formData = new FormData();
-    formData.append('first_name', firstName.trim());
-    formData.append('last_name', lastName.trim());
-    formData.append('username', userName.trim());
-    formData.append('password', password.trim());
+    formData.append('first_name', data.firstname.trim());
+    formData.append('last_name', data.lastname.trim());
+    formData.append('username', data.username.trim());
+    formData.append('password', data.password.trim());
 
-    if (bio) {
-      formData.append('bio', bio);
+    if (data.bio) {
+      formData.append('bio', data.bio);
     }
-    if (avatar) {
-      formData.append('avatar', avatar);
+    if (data.avatar) {
+      formData.append('avatar', data.avatar);
     }
 
     try {
-      const response = await fetch(
-        'https://vkedu-fullstack-div2.ru/api/register/',
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
+      const response = await fetch(`${API_URL}/register/`, {
+        method: 'POST',
+        body: formData,
+      });
 
       if (!response.ok) {
         if (response.status === 400) {
@@ -89,82 +101,111 @@ export function SectionCreateUser() {
             acc[key] = dataErrors[key].join('; ');
             return acc;
           }, {});
-          setStatusLoading('reject');
-          setTimeout(() => {
-            setErrors(formattedErrors);
-            setStatusLoading(null);
-          }, 1000);
+          setErrors(formattedErrors);
         } else {
           throw new Error(`Произошла ошибка ${response.status}`);
         }
       } else {
-        setStatusLoading('done');
-        setTimeout(() => {
-          setStatusLoading(null);
-          navigate('/');
-        }, 1000);
+        navigate('/');
       }
     } catch (error) {
       console.error('Error:', error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const handleChangeInput = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setErrors((prev) => ({ ...prev, detail: null, [name]: null }));
+    setData((prev) => ({ ...prev, detail: null, [name]: value }));
+  };
+
   const handleChangeAvatar = (e) => {
-    clearError('avatar');
+    setErrors((prev) => ({ ...prev, avatar: null }));
     const file = e.target.files[0];
     if (file) {
-      setAvatar(file);
+      setData((prev) => ({ ...prev, avatar: file }));
       setAvatarPreview(URL.createObjectURL(file));
     } else {
       setAvatarPreview('');
     }
   };
-  const handleChangeFirstName = (e) => {
-    clearError('first_name');
-    setFirstName(e.currentTarget.value);
-  };
-  const handleChangeLastName = (e) => {
-    clearError('last_name');
-    setLastName(e.currentTarget.value);
-  };
-  const handleChangeUserName = (e) => {
-    clearError('username');
-    setUserName(e.currentTarget.value);
-  };
-  const handleChangePassword = (e) => {
-    clearError('password');
-    setPassword(e.currentTarget.value);
-  };
-  const handleChangeBio = (e) => {
-    clearError('bio');
-    setBio(e.currentTarget.value);
-  };
 
-  const clearError = (fieldName) => {
-    setErrors((prev) => ({
-      ...prev,
-      [fieldName]: '',
-    }));
+  const handleClickAvatarInput = () => {
+    if (!refAvatarInput.current) return;
+    refAvatarInput.current.click();
   };
 
   return (
     <section className={styles.section} tabIndex="-1">
       <form className={styles.form} onSubmit={handleSubmitForm}>
         <div className={styles.fieldContainer}>
+          <div className={styles.avatarPreview}>
+            {avatarPreview ? (
+              <div
+                className={styles.containerPreviewImage}
+                onClick={handleClickAvatarInput}
+              >
+                <img
+                  tabIndex={0}
+                  src={avatarPreview}
+                  alt="Предпросмотр аватара"
+                  className={styles.avatarImage}
+                />
+                <AddAPhotoIcon
+                  className={styles.addPhotoIcon}
+                  sx={{
+                    color: '#fff',
+                    position: 'absolute',
+                    transform: 'translate(-50%, -50%)',
+                    top: '50%',
+                    left: '50%',
+                    zIndex: '2',
+                  }}
+                />
+              </div>
+            ) : (
+              <div
+                onClick={handleClickAvatarInput}
+                tabIndex={0}
+                className={styles.defaultPreviewAvatar}
+              >
+                <AddAPhotoIcon sx={{ color: '#837d7d' }} />
+                <p className={styles.previewAvatarText}>Добавить изображение</p>
+              </div>
+            )}
+          </div>
+          <input
+            ref={refAvatarInput}
+            onChange={handleChangeAvatar}
+            className={styles.avatarInput}
+            name="avatar"
+            type="file"
+            accept="image/*"
+          />
+          {errors.avatar && (
+            <div className={styles.errorText}>{errors.avatar}</div>
+          )}
+        </div>
+        <div className={styles.fieldContainer}>
           <label htmlFor={nameInputId} className={styles.fieldName}>
             Имя*
           </label>
           <input
             id={nameInputId}
-            value={firstName}
-            onChange={handleChangeFirstName}
+            value={data.firstname}
+            onChange={handleChangeInput}
             autoComplete="false"
             className={styles.input}
             name="firstname"
             placeholder="Введите имя"
             type="text"
           />
-          {errors.first_name && (
-            <div className={styles.errorText}>{errors.first_name}</div>
+          {errors.firstname && (
+            <div className={styles.errorText}>{errors.firstname}</div>
           )}
         </div>
         <div className={styles.fieldContainer}>
@@ -173,16 +214,16 @@ export function SectionCreateUser() {
           </label>
           <input
             id={fioInputId}
-            value={lastName}
-            onChange={handleChangeLastName}
+            value={data.lastname}
+            onChange={handleChangeInput}
             autoComplete="false"
             className={styles.input}
             name="lastname"
             placeholder="Введите фамилию"
             type="text"
           />
-          {errors.last_name && (
-            <div className={styles.errorText}>{errors.last_name}</div>
+          {errors.lastname && (
+            <div className={styles.errorText}>{errors.lastname}</div>
           )}
         </div>
         <div className={styles.fieldContainer}>
@@ -191,13 +232,13 @@ export function SectionCreateUser() {
           </label>
           <input
             id={userNameInputId}
-            value={userName}
+            value={data.username}
             className={styles.input}
             autoComplete="false"
             name="username"
             placeholder="Введите имя пользователя"
             type="text"
-            onChange={handleChangeUserName}
+            onChange={handleChangeInput}
           />
           {errors.username ? (
             <div className={styles.errorText}>{errors.username}</div>
@@ -213,13 +254,13 @@ export function SectionCreateUser() {
           </label>
           <input
             id={passwordInputId}
-            value={password}
+            value={data.password}
             className={styles.input}
             autoComplete="false"
             name="password"
             placeholder="Введите пароль"
             type="password"
-            onChange={handleChangePassword}
+            onChange={handleChangeInput}
           />
           {errors.password && (
             <div className={styles.errorText}>{errors.password}</div>
@@ -231,45 +272,19 @@ export function SectionCreateUser() {
           </label>
           <textarea
             id={bioTextAreaId}
-            value={bio}
-            onChange={handleChangeBio}
+            value={data.bio}
+            name="bio"
+            onChange={handleChangeInput}
             className={styles.textarea}
-            rows={10}
+            rows={3}
             placeholder="Расскажите о себе"
           />
           {errors.bio && <div className={styles.errorText}>{errors.bio}</div>}
         </div>
-        <div className={styles.fieldContainer}>
-          <label htmlFor={avatarInputId} className={styles.fieldName}>
-            Изображение профиля
-          </label>
-          {avatarPreview && (
-            <div className={styles.avatarPreview}>
-              <img
-                src={avatarPreview}
-                alt="Предпросмотр аватара"
-                className={styles.avatarImage}
-              />
-            </div>
-          )}
-          <input
-            id={avatarInputId}
-            onChange={handleChangeAvatar}
-            className={styles.input}
-            name="avatar"
-            type="file"
-            accept="image/*"
-          />
-          {errors.avatar && (
-            <div className={styles.errorText}>{errors.avatar}</div>
-          )}
-        </div>
-
         <button className={styles.submitBtn} type="submit">
           Создать аккаунт
         </button>
       </form>
-      <Loader status={statusLoading} />
     </section>
   );
 }

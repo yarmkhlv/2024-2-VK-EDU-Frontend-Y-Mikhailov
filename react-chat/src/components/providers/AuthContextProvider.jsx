@@ -2,6 +2,8 @@ import { useState, createContext } from 'react';
 
 export const AuthContext = createContext();
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export function AuthProvider({ children }) {
   const [accessToken, setAccessToken] = useState(null);
   const [refreshToken, setRefreshToken] = useState(null);
@@ -18,16 +20,13 @@ export function AuthProvider({ children }) {
 
   const refreshAccessToken = async () => {
     try {
-      const response = await fetch(
-        'https://vkedu-fullstack-div2.ru/api/auth/refresh/',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ refresh: refreshToken }),
-        }
-      );
+      const response = await fetch(`${API_URL}/auth/refresh/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ refresh: refreshToken }),
+      });
 
       if (!response.ok) {
         throw new Error('Ошибка получения токена');

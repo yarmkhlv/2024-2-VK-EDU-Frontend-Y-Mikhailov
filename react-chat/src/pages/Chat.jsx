@@ -6,6 +6,8 @@ import { SectionInput } from '../components/widgets/SectionInput/SectionInput';
 import { useAuth } from '../components/providers/helpers/useAuth';
 import { useInfoChat, useCentrifugo, useCurrentUser } from '../utils/API/hooks';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const COUNT_MESSAGE_PAGES = 30;
 
 export function Chat() {
@@ -32,7 +34,7 @@ export function Chat() {
     const calcNextPage = Math.trunc(messages.length / COUNT_MESSAGE_PAGES) + 1;
     try {
       const response = await fetch(
-        `https://vkedu-fullstack-div2.ru/api/messages?chat=${id}&page=${calcNextPage}&page_size=${COUNT_MESSAGE_PAGES}`,
+        `${API_URL}/messages?chat=${id}&page=${calcNextPage}&page_size=${COUNT_MESSAGE_PAGES}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

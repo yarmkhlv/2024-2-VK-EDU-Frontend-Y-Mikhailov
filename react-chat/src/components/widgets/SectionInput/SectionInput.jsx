@@ -4,6 +4,8 @@ import SendIcon from '@mui/icons-material/Send';
 import { useAuth } from '../../providers/helpers/useAuth';
 import { useNavigate } from 'react-router-dom';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export function SectionInput({ id }) {
   const navigate = useNavigate();
   const { accessToken, refreshAccessToken } = useAuth();
@@ -18,20 +20,17 @@ export function SectionInput({ id }) {
     const trimmedText = inputRef.current.value.trim();
     if (!trimmedText) return;
     try {
-      const response = await fetch(
-        `https://vkedu-fullstack-div2.ru/api/messages/`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({
-            text: trimmedText,
-            chat: id,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/messages/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          text: trimmedText,
+          chat: id,
+        }),
+      });
 
       if (!response.ok) {
         if (response.status === 401) {

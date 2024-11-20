@@ -4,49 +4,51 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../providers/helpers/useAuth';
 import styles from './sectionLogin.module.scss';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export function SectionLogin() {
   const navigate = useNavigate();
   const { setTokens } = useAuth();
 
   const userNameInputId = useId();
   const passwordInputId = useId();
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorText, setErrorText] = useState('');
+  const [data, setData] = useState({ username: '', password: '' });
+  const [errors, setErrors] = useState({
+    login: null,
+    password: null,
+    detail: null,
+  });
 
-  const handleChangeUserName = (e) => {
-    if (errorText) setErrorText('');
-    setUserName(e.currentTarget.value);
+  const handleChangeInput = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setErrors((prev) => ({ ...prev, detail: null, [name]: null }));
+    setData((prev) => ({ ...prev, detail: null, [name]: value }));
   };
-  const handleChangePassword = (e) => {
-    if (errorText) setErrorText('');
-    setPassword(e.currentTarget.value);
-  };
+
   const handleClickBtnCreate = async (e) => {
     e.preventDefault();
 
-    const trimmedUserName = userName.trim();
-    const trimmedPassword = password.trim();
+    const trimmedUserName = data.username.trim();
+    const trimmedPassword = data.password.trim();
 
     try {
-      const response = await fetch(
-        'https://vkedu-fullstack-div2.ru/api/auth/',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: trimmedUserName,
-            password: trimmedPassword,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/auth/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: trimmedUserName,
+          password: trimmedPassword,
+        }),
+      });
 
       if (!response.ok) {
         const dataError = await response.json();
-        const formattedTextError = Object.values(dataError).join('; ');
-        setErrorText(formattedTextError);
+
+        setErrors((prev) => ({ ...prev, ...dataError }));
         throw new Error(`Ошибка ${response.status}`);
       } else {
         const data = await response.json();
@@ -75,14 +77,17 @@ export function SectionLogin() {
             </label>
             <input
               id={userNameInputId}
-              value={userName}
-              onChange={handleChangeUserName}
+              value={data.username}
+              onChange={handleChangeInput}
               autoComplete="false"
               className={styles.input}
-              name="fullname"
+              name="username"
               placeholder="Введите имя пользователя"
               type="text"
             />
+            {errors.username && (
+              <div className={styles.errorText}>{errors.username}</div>
+            )}
           </div>
           <div className={styles.fieldContainer}>
             <label htmlFor={passwordInputId} className={styles.fieldName}>
@@ -90,16 +95,21 @@ export function SectionLogin() {
             </label>
             <input
               id={passwordInputId}
-              value={password}
-              onChange={handleChangePassword}
+              value={data.password}
+              onChange={handleChangeInput}
               autoComplete="false"
               className={styles.input}
-              name="fullname"
+              name="password"
               placeholder="Введите пароль"
               type="password"
             />
+            {errors.password && (
+              <div className={styles.errorText}>{errors.password}</div>
+            )}
           </div>
-          {errorText && <div className={styles.errorText}>{errorText}</div>}
+          {errors.detail && (
+            <div className={styles.errorText}>{errors.detail}</div>
+          )}
           <div className={styles.btnBlock}>
             <button
               className={styles.btn}

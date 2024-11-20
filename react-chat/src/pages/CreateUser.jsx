@@ -5,7 +5,7 @@ import { SectionCreateUser } from '../components/widgets/SectionCreateUser/Secti
 export function CreateUser() {
   return (
     <>
-      <HeaderEditProfile navigateLink="/" />
+      <HeaderEditProfile title="Создание пользователя" navigateLink="/" />
       <main className="main">
         <SectionCreateUser />
       </main>

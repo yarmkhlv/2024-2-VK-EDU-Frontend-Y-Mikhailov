@@ -5,7 +5,11 @@ import clsx from 'clsx';
 
 import styles from './headerEditProfile.module.scss';
 
-export function HeaderEditProfile({ navigateLink, saveProfile }) {
+export function HeaderEditProfile({
+  title = 'Редактирование пользователя',
+  navigateLink,
+  saveProfile,
+}) {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -18,9 +22,7 @@ export function HeaderEditProfile({ navigateLink, saveProfile }) {
             </Link>
           </div>
           <div className={styles.middleBlock}>
-            <div className={styles.editProfileText}>
-              Редактирование пользователя
-            </div>
+            <div className={styles.editProfileText}>{title}</div>
           </div>
           {/* <div className={styles.rightBlock}>
             <div className={styles.doneButtonBlock}>

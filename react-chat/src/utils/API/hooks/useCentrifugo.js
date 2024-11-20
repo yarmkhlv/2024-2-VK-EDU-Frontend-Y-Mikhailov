@@ -2,32 +2,28 @@ import { useEffect } from 'react';
 import { Centrifuge } from 'centrifuge';
 import { useAuth } from '../../../components/providers/helpers/useAuth';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export function useCentrifugo(currentUser, setMessages, setCountMessages) {
   const { accessToken } = useAuth();
 
   const getConnectionToken = async () => {
-    const response = await fetch(
-      'https://vkedu-fullstack-div2.ru/api/centrifugo/connect/',
-      {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${accessToken}` },
-      }
-    );
+    const response = await fetch(`${API_URL}/centrifugo/connect/`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
     const data = await response.json();
     return data.token;
   };
 
   const getSubscriptionToken = async () => {
-    const response = await fetch(
-      'https://vkedu-fullstack-div2.ru/api/centrifugo/subscribe/',
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await fetch(`${API_URL}/centrifugo/subscribe/`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
     const data = await response.json();
     return data.token;
   };

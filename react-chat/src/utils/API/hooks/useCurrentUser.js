@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../components/providers/helpers/useAuth';
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 export const useCurrentUser = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const { accessToken, refreshAccessToken } = useAuth();
@@ -14,14 +16,11 @@ export const useCurrentUser = () => {
       }
 
       try {
-        const response = await fetch(
-          'https://vkedu-fullstack-div2.ru/api/user/current/',
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const response = await fetch(`${API_URL}/user/current/`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
 
         if (!response.ok) {
           if (response.status === 401 && retryCount > 0) {

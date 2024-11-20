@@ -8,6 +8,8 @@ import { EditProfile } from './pages/EditProfile';
 import { CreateUser } from './pages/CreateUser';
 import { Login } from './pages/Login';
 import { AuthProvider } from './components/providers/AuthContextProvider';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -22,6 +24,7 @@ function App() {
           <Route path="/*" element={<Error />} />
         </Routes>
       </HashRouter>
+      <ToastContainer />
     </AuthProvider>
   );
 }
