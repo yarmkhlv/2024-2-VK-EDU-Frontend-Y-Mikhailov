@@ -1,0 +1,95 @@
+@use '../../../../../styles/base/breakpoints.scss' as *;
+@use '../../../../../styles/base/variables.scss' as *;
+
+.messageContainer {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+
+  .anotherPerson {
+    align-self: flex-start;
+  }
+}
+
+.ownPerson {
+  align-self: flex-end;
+
+  max-width: 85%;
+  padding: 12px;
+
+  background-color: var(--color-background-own-message);
+  border-radius: 8px;
+
+  color: #ffffff;
+}
+
+.blockWithText {
+  max-width: 85%;
+
+  padding: 12px;
+
+  border-radius: 8px;
+
+  background-color: var(--color-background-message);
+}
+
+.avatar {
+  overflow: hidden;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 43px;
+  height: 43px;
+
+  border-radius: 50%;
+
+  background-color: bisque;
+}
+
+.userImg {
+  width: 100%;
+  height: 100%;
+}
+.username {
+  margin-bottom: 5px;
+
+  font-weight: 500;
+  color: #ff8a00;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.message {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.timeMessage {
+  transform: translateY(10px);
+  float: right;
+  padding-left: 8px;
+
+  font-size: 10px;
+}
+.initials {
+  font-weight: 600;
+  font-size: 24px;
+}
+
+@keyframes showNewMessage {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.newMessage {
+  animation: showNewMessage 0.5s forwards;
+}

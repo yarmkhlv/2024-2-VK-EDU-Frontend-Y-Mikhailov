@@ -42,6 +42,10 @@
   }
 
   .createChatBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     border: none;
     border-radius: 50%;
     cursor: pointer;
@@ -62,6 +66,10 @@
 
     &:focus-visible {
       outline: 2px solid (--accessibility-outline);
+    }
+
+    &.noAnimation {
+      animation: none;
     }
   }
 }

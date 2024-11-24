@@ -1,5 +1,4 @@
 @use '../../../styles/base/variables.scss' as *;
-@use '../../../styles/base/breakpoints.scss' as *;
 
 .section {
   flex-grow: 1;
@@ -51,7 +50,6 @@
   }
 }
 .avatarPreview {
-  grid-area: a;
   margin: 10px 0px;
   display: flex;
   justify-content: center;
@@ -91,71 +89,6 @@
   border-radius: 50%;
   object-fit: cover;
 }
-.avatarInput {
-  display: none;
-}
-.fieldMoreContainer {
-  position: relative;
-
-  width: 100%;
-
-  display: grid;
-  grid-template-areas:
-    'a b'
-    'a c';
-
-  column-gap: 20px;
-
-  @include tablet {
-    column-gap: 40px;
-  }
-
-  .containerForFirstName {
-    grid-area: b;
-  }
-  .containerForLastName {
-    grid-area: c;
-  }
-  .fieldName {
-    display: inline-block;
-    margin-bottom: 5px;
-  }
-
-  .errorText,
-  .recommendText {
-    margin-top: 4px;
-
-    font-size: 12px;
-  }
-  .errorText {
-    color: red;
-  }
-  .recommendText {
-    color: var(--color-gray-strong);
-  }
-
-  .input {
-    width: 100%;
-    padding: 8px;
-
-    border-radius: 8px;
-    background-color: #f0f0f3;
-    outline: none;
-
-    font-size: 18px;
-
-    &:hover {
-      outline: 2px solid var(--accessibility-outline-transparent);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--accessibility-outline);
-    }
-  }
-  .input {
-    height: 56px;
-  }
-}
 
 .fieldContainer {
   position: relative;
@@ -178,7 +111,9 @@
   .recommendText {
     color: var(--color-gray-strong);
   }
-
+  .avatarInput {
+    display: none;
+  }
   .input,
   .textarea {
     width: 100%;
@@ -211,3 +146,20 @@
   border: 1px solid black;
   border-radius: 5px;
 }
+
+// Заготовка на будущее, мб использую
+// .newError {
+//   max-height: 0;
+//   opacity: 0;
+//   visibility: hidden;
+//   overflow: hidden;
+//   color: red;
+//   transition:
+//     max-height 1s ease,
+//     opacity 1s ease;
+// }
+// .newError.active {
+//   max-height: 100px;
+//   visibility: visible;
+//   opacity: 1;
+// }

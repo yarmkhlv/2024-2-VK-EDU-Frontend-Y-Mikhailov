@@ -1,0 +1,40 @@
+@use '../../../../../styles/base/variables.scss' as *;
+
+.menu {
+  position: absolute;
+  right: 20px;
+  bottom: 90px;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+
+  padding: 15px 10px;
+
+  border: 1px solid rgb(190, 175, 175);
+  border-radius: 5px;
+
+  box-shadow: 0 4px 8px #0003;
+
+  background-color: #fff;
+
+  .menuItem {
+    height: 30px;
+
+    padding: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+    font-weight: 500;
+
+    &:hover {
+      background-color: var(--color-gray);
+      transition: background-color 0.5s ease;
+    }
+  }
+}

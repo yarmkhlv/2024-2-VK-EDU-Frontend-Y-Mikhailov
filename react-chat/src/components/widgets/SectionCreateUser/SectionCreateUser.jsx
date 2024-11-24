@@ -1,41 +1,40 @@
-import { useId, useState, useEffect, useRef } from 'react';
+import { useId, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
-import styles from './sectionEditProfile.module.scss';
 import { validateField } from '../../../utils/validateField';
 import { MIN_VALID_LENGTH_USER_NAME } from '../../../utils/variables';
-import { useAuth } from '../../providers/helpers/useAuth';
-import { successToast, rejectToast } from '../../../utils/toastes/toastes';
+import styles from './sectionCreateUser.module.scss';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export function SectionEditProfile({ currentUser }) {
-  const { accessToken, refreshAccessToken } = useAuth();
+export function SectionCreateUser() {
+  const navigate = useNavigate();
 
   const refAvatarInput = useRef(null);
 
   const nameInputId = useId();
   const fioInputId = useId();
   const userNameInputId = useId();
+  const passwordInputId = useId();
   const bioTextAreaId = useId();
-
-  const [id, setId] = useState('');
-
-  const [avatarPreview, setAvatarPreview] = useState('');
-
-  const [formIsChanged, setFormIsChanged] = useState(false);
 
   const [data, setData] = useState({
     firstname: '',
     lastname: '',
     username: '',
+    password: '',
     bio: '',
     avatar: null,
   });
+
+  const [avatarPreview, setAvatarPreview] = useState('');
 
   const [errors, setErrors] = useState({
     firstname: '',
     lastname: '',
     username: '',
+    password: '',
+    bio: '',
     avatar: '',
   });
 
@@ -49,62 +48,50 @@ export function SectionEditProfile({ currentUser }) {
       true,
       MIN_VALID_LENGTH_USER_NAME
     );
-    if (textErrorFirstName || textErrorLastName || textErrorUserName) {
+    const textErrorPassword = validateField(data.password, true);
+    if (
+      textErrorFirstName ||
+      textErrorLastName ||
+      textErrorUserName ||
+      textErrorPassword
+    ) {
       setErrors((prev) => ({
         ...prev,
         firstname: textErrorFirstName,
         lastname: textErrorLastName,
         username: textErrorUserName,
+        password: textErrorPassword,
       }));
       return false;
     }
     return true;
   };
 
-  const handleSubmitForm = async (e, retryCount = 1) => {
-    e.preventDefault();
+  const handleSubmitForm = async (e) => {
     if (isLoading) return;
-    if (!formIsChanged) {
-      rejectToast('Вы не внесли изменений.');
-      return;
-    }
     setIsLoading(true);
+    e.preventDefault();
     const isValid = validateFields();
 
-    if (!isValid) {
-      setIsLoading(false);
-
-      return;
-    }
+    if (!isValid) return;
+    setIsLoading(false);
     const formData = new FormData();
-    const trimmedFirstName = data.firstname.trim();
-    const trimmedLastName = data.lastname.trim();
-    const trimmedUserName = data.username.trim();
-    const trimmedBio = data.bio.trim();
+    formData.append('first_name', data.firstname.trim());
+    formData.append('last_name', data.lastname.trim());
+    formData.append('username', data.username.trim());
+    formData.append('password', data.password.trim());
 
-    if (trimmedFirstName !== currentUser.firstname) {
-      formData.append('first_name', trimmedFirstName);
-    }
-    if (trimmedLastName !== currentUser.lastname) {
-      formData.append('last_name', trimmedLastName);
-    }
-    if (trimmedUserName !== currentUser.username) {
-      formData.append('username', trimmedUserName);
-    }
-    if (trimmedBio !== currentUser.bio) {
-      formData.append('bio', trimmedBio);
+    if (data.bio) {
+      formData.append('bio', data.bio);
     }
     if (data.avatar) {
       formData.append('avatar', data.avatar);
     }
 
     try {
-      const response = await fetch(`${API_URL}/user/${id}`, {
-        method: 'PATCH',
+      const response = await fetch(`${API_URL}/register/`, {
+        method: 'POST',
         body: formData,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
       });
 
       if (!response.ok) {
@@ -115,27 +102,25 @@ export function SectionEditProfile({ currentUser }) {
             return acc;
           }, {});
           setErrors(formattedErrors);
-        }
-        if (response.status === 401 && retryCount > 0) {
-          const newAccessToken = await refreshAccessToken();
-          if (newAccessToken) {
-            return handleSubmitForm(e, retryCount - 1);
-          } else {
-            throw new Error('Unable to refresh access token.');
-          }
         } else {
           throw new Error(`Произошла ошибка ${response.status}`);
         }
       } else {
-        successToast('Профиль успешно обновлен!');
-        setFormIsChanged(false);
+        navigate('/');
       }
     } catch (error) {
       console.error('Error:', error.message);
-      rejectToast('Произошла ошибка. Данные не сохранены.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleChangeInput = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+
+    setErrors((prev) => ({ ...prev, detail: null, [name]: null }));
+    setData((prev) => ({ ...prev, detail: null, [name]: value }));
   };
 
   const handleChangeAvatar = (e) => {
@@ -147,15 +132,6 @@ export function SectionEditProfile({ currentUser }) {
     } else {
       setAvatarPreview('');
     }
-    setFormIsChanged(true);
-  };
-  const handleChangeInput = (e) => {
-    const name = e.target.name;
-    const value = e.target.value;
-
-    setErrors((prev) => ({ ...prev, detail: null, [name]: null }));
-    setData((prev) => ({ ...prev, detail: null, [name]: value }));
-    setFormIsChanged(true);
   };
 
   const handleClickAvatarInput = () => {
@@ -163,21 +139,10 @@ export function SectionEditProfile({ currentUser }) {
     refAvatarInput.current.click();
   };
 
-  useEffect(() => {
-    if (currentUser) {
-      setId(currentUser.id || '');
-      setAvatarPreview(currentUser.avatar || '');
-      setData((prev) => ({ ...prev, firstname: currentUser.first_name }));
-      setData((prev) => ({ ...prev, lastname: currentUser.last_name }));
-      setData((prev) => ({ ...prev, username: currentUser.username }));
-      setData((prev) => ({ ...prev, bio: currentUser.bio }));
-    }
-  }, [currentUser]);
-
   return (
     <section className={styles.section} tabIndex="-1">
       <form className={styles.form} onSubmit={handleSubmitForm}>
-        <div className={styles.fieldMoreContainer}>
+        <div className={styles.fieldContainer}>
           <div className={styles.avatarPreview}>
             {avatarPreview ? (
               <div
@@ -212,57 +177,55 @@ export function SectionEditProfile({ currentUser }) {
                 <p className={styles.previewAvatarText}>Добавить изображение</p>
               </div>
             )}
-            <input
-              ref={refAvatarInput}
-              onChange={handleChangeAvatar}
-              className={styles.avatarInput}
-              name="avatar"
-              type="file"
-              accept="image/*"
-            />
-            {errors.avatar && (
-              <div className={styles.errorText}>{errors.avatar}</div>
-            )}
           </div>
-          <div className={styles.containerForFirstName}>
-            <label htmlFor={nameInputId} className={styles.fieldName}>
-              Имя*
-            </label>
-            <input
-              id={nameInputId}
-              value={data.firstname}
-              onChange={handleChangeInput}
-              autoComplete="false"
-              className={styles.input}
-              name="firstname"
-              placeholder="Введите имя"
-              type="text"
-            />
-            {errors.firstname && (
-              <div className={styles.errorText}>{errors.firstname}</div>
-            )}
-          </div>
-
-          <div className={styles.containerForLastName}>
-            <label htmlFor={fioInputId} className={styles.fieldName}>
-              Фамилия*
-            </label>
-            <input
-              id={fioInputId}
-              value={data.lastname}
-              onChange={handleChangeInput}
-              autoComplete="false"
-              className={styles.input}
-              name="lastname"
-              placeholder="Введите фамилию"
-              type="text"
-            />
-            {errors.lastname && (
-              <div className={styles.errorText}>{errors.lastname}</div>
-            )}
-          </div>
+          <input
+            ref={refAvatarInput}
+            onChange={handleChangeAvatar}
+            className={styles.avatarInput}
+            name="avatar"
+            type="file"
+            accept="image/*"
+          />
+          {errors.avatar && (
+            <div className={styles.errorText}>{errors.avatar}</div>
+          )}
         </div>
-
+        <div className={styles.fieldContainer}>
+          <label htmlFor={nameInputId} className={styles.fieldName}>
+            Имя*
+          </label>
+          <input
+            id={nameInputId}
+            value={data.firstname}
+            onChange={handleChangeInput}
+            autoComplete="false"
+            className={styles.input}
+            name="firstname"
+            placeholder="Введите имя"
+            type="text"
+          />
+          {errors.firstname && (
+            <div className={styles.errorText}>{errors.firstname}</div>
+          )}
+        </div>
+        <div className={styles.fieldContainer}>
+          <label htmlFor={fioInputId} className={styles.fieldName}>
+            Фамилия*
+          </label>
+          <input
+            id={fioInputId}
+            value={data.lastname}
+            onChange={handleChangeInput}
+            autoComplete="false"
+            className={styles.input}
+            name="lastname"
+            placeholder="Введите фамилию"
+            type="text"
+          />
+          {errors.lastname && (
+            <div className={styles.errorText}>{errors.lastname}</div>
+          )}
+        </div>
         <div className={styles.fieldContainer}>
           <label htmlFor={userNameInputId} className={styles.fieldName}>
             Имя пользователя*
@@ -286,12 +249,31 @@ export function SectionEditProfile({ currentUser }) {
           )}
         </div>
         <div className={styles.fieldContainer}>
+          <label htmlFor={passwordInputId} className={styles.fieldName}>
+            Пароль*
+          </label>
+          <input
+            id={passwordInputId}
+            value={data.password}
+            className={styles.input}
+            autoComplete="false"
+            name="password"
+            placeholder="Введите пароль"
+            type="password"
+            onChange={handleChangeInput}
+          />
+          {errors.password && (
+            <div className={styles.errorText}>{errors.password}</div>
+          )}
+        </div>
+        <div className={styles.fieldContainer}>
           <label htmlFor={bioTextAreaId} className={styles.fieldName}>
             Биография
           </label>
           <textarea
             id={bioTextAreaId}
             value={data.bio}
+            name="bio"
             onChange={handleChangeInput}
             className={styles.textarea}
             rows={3}
@@ -300,7 +282,7 @@ export function SectionEditProfile({ currentUser }) {
           {errors.bio && <div className={styles.errorText}>{errors.bio}</div>}
         </div>
         <button className={styles.submitBtn} type="submit">
-          Сохранить изменения
+          Создать аккаунт
         </button>
       </form>
     </section>
