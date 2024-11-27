@@ -7,6 +7,7 @@ export function showNotification(message) {
   if (Notification.permission === 'granted') {
     new Notification(message.sender.username, {
       body: message.text,
+      icon: message.sender.avatar,
     });
   } else if (Notification.permission !== 'denied') {
     Notification.requestPermission().then((permission) => {
