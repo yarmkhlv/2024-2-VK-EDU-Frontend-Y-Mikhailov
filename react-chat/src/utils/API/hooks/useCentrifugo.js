@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { Centrifuge } from 'centrifuge';
 import { useAuth } from '../../../components/providers/helpers/useAuth';
+import { showNotification } from '../../showNotification';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export function useCentrifugo(currentUser, setMessages, setCountMessages) {
+export function useCentrifugo(id, currentUser, setMessages, setCountMessages) {
   const { accessToken } = useAuth();
 
   const getConnectionToken = async () => {
@@ -54,10 +55,17 @@ export function useCentrifugo(currentUser, setMessages, setCountMessages) {
 
         subscription.on('publication', (ctx) => {
           const { event, message } = ctx.data;
-
+          const isCurrentChat = id === message.chat;
           if (event === 'create') {
             setMessages((prevMessages) => {
-              if (prevMessages.some((msg) => msg.id === message.id)) {
+              if (
+                prevMessages.some(
+                  (msg) => msg.id === message.id || !isCurrentChat
+                )
+              ) {
+                if (!isCurrentChat) {
+                  showNotification(message);
+                }
                 return prevMessages;
               }
               return [message, ...prevMessages];

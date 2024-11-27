@@ -46,7 +46,7 @@
 
   border-radius: 50%;
 
-  background-color: bisque;
+  background-color: rgb(73 255 50 / 27%);
 }
 
 .userImg {
@@ -92,4 +92,17 @@
 
 .newMessage {
   animation: showNewMessage 0.5s forwards;
+}
+
+.imgContainer {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+.img {
+  border-radius: 8px;
+}
+
+audio::-webkit-media-controls-panel {
+  width: 200px;
 }

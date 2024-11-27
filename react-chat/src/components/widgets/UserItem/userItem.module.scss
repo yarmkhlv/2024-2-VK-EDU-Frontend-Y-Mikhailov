@@ -11,6 +11,8 @@
     background-color: var(--color-gray);
     transition: background-color 0.5s ease;
   }
+
+  border-radius: 8px;
 }
 
 .userInfo {
@@ -20,6 +22,8 @@
   flex: 1;
 
   overflow: hidden;
+
+  cursor: pointer;
 }
 
 .avatar {
@@ -35,7 +39,7 @@
 
   border-radius: 50%;
 
-  background-color: bisque;
+  background-color: rgb(73 255 50 / 27%);
 }
 
 .userImg {

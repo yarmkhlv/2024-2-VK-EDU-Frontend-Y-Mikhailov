@@ -292,6 +292,7 @@ export function SectionEditProfile({ currentUser }) {
           <textarea
             id={bioTextAreaId}
             value={data.bio}
+            name="bio"
             onChange={handleChangeInput}
             className={styles.textarea}
             rows={3}
