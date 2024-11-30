@@ -4,7 +4,6 @@
 .section {
   display: flex;
   overflow-y: auto;
-
   flex: 1;
 
   &::-webkit-scrollbar {
@@ -23,7 +22,7 @@
   }
 
   .chatList {
-    flex-grow: 1;
+    overflow-y: auto;
     padding: 5px 0px;
     & > :not(:first-child) {
       border-top: 1px solid rgb(0 0 0 / 15%);

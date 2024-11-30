@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChatItem } from '../ChatItem/ChatItem';
 import { useAuth } from '../../providers/helpers/useAuth';
 import { Menu } from './ui/Menu/Menu';
+import { rejectToast } from '../../../utils/toastes/toastes';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './sectionChatList.module.scss';
@@ -10,16 +11,27 @@ import { useNavigate } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
+const INVALID_CREATE_TOKEN_ERROR = `Ошибка в создании токена`;
+
 export function SectionChatList({ openModal, setTypeCreateChat }) {
   const navigate = useNavigate();
+
+  const chatListRef = useRef(null);
 
   const { accessToken, refreshAccessToken } = useAuth();
 
   const [chatList, setChatList] = useState([]);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
+  const [fetchUrl, setFetchUrl] = useState(`${API_URL}/chats/?page_size=10`);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [lastHeight, setLastHeight] = useState(null);
+
   const fetchChats = async (retryCount = 1) => {
+    if (!fetchUrl || isLoading) return;
+    setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/chats/`, {
+      const response = await fetch(fetchUrl, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -35,12 +47,19 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
       } else {
         const data = await response.json();
 
-        const { results } = data;
-        setChatList(results);
+        const { next, results } = data;
+        setChatList((prev) => [...prev, ...results]);
+        setFetchUrl(next);
       }
     } catch (error) {
       console.error('Error:', error.message);
-      navigate('/');
+      if (error.message === INVALID_CREATE_TOKEN_ERROR) {
+        navigate('/');
+      } else {
+        rejectToast('Не удалось загрузить предыдущие чаты.');
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -54,6 +73,22 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
     });
   };
 
+  const handleScrollChatList = (e) => {
+    const containerElement = e.target;
+    const { scrollTop, scrollHeight, clientHeight } = containerElement;
+    const isBottom = scrollHeight - (scrollTop + clientHeight) < 1;
+    if (isBottom && !isLoading) {
+      setLastHeight(scrollHeight);
+      fetchChats();
+    }
+  };
+
+  useEffect(() => {
+    if (!chatListRef.current || !lastHeight) return;
+    chatListRef.current.scrollTop =
+      lastHeight - chatListRef.current.clientHeight;
+  }, [chatList]);
+
   useEffect(() => {
     if (accessToken) {
       fetchChats();
@@ -65,7 +100,13 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
   return (
     <section className={styles.section} tabIndex="-1">
       <div className={styles.container}>
-        <div className={styles.chatList}>{renderChatList}</div>
+        <div
+          ref={chatListRef}
+          onScroll={handleScrollChatList}
+          className={styles.chatList}
+        >
+          {renderChatList}
+        </div>
         <div className={styles.createChatContainer}>
           <button
             className={clsx(

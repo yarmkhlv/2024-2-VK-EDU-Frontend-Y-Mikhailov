@@ -1,4 +1,5 @@
 import { useId, useState, useRef } from 'react';
+import { rejectToast } from '../../../utils/toastes/toastes';
 import { useNavigate } from 'react-router-dom';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { validateField } from '../../../utils/validateField';
@@ -110,6 +111,9 @@ export function SectionCreateUser() {
       }
     } catch (error) {
       console.error('Error:', error.message);
+      if (error.message === 'Failed to fetch') {
+        rejectToast('Не удалось создать пользователя, попробуйте позже.');
+      }
     } finally {
       setIsLoading(false);
     }

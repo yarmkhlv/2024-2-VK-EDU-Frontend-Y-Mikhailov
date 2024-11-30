@@ -58,6 +58,7 @@ export function PrivateMessage({ currentUserId, messageData }) {
           {files.map((el, i) => (
             <img className={styles.img} key={i} src={el.item} />
           ))}
+          {text}
         </div>
       ) : (
         text

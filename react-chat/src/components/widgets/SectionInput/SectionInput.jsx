@@ -22,6 +22,8 @@ const modalClasses = {
   additionalModalContent: styles.additionalModalContent,
 };
 
+const INVALID_CREATE_TOKEN_ERROR = `Ошибка в создании токена`;
+
 export function SectionInput({ id, selectedImages, setSelectedImages }) {
   const navigate = useNavigate();
   const geolocation = navigator.geolocation;
@@ -32,6 +34,7 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const [inputValue, setInputValue] = useState('');
+  const [inputValueAtPreview, setInputValueAtPreview] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isOpenAttachData, setIsOpenAttachData] = useState(false);
@@ -79,6 +82,7 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
 
   const closePreviewImages = () => {
     setSelectedImages([]);
+    setInputValueAtPreview('');
   };
 
   const handleRemoveImg = (name) => {
@@ -101,6 +105,10 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
       });
       formData.append('chat', id);
 
+      if (inputValueAtPreview) {
+        formData.append('text', inputValueAtPreview);
+      }
+
       const response = await fetch(`${API_URL}/messages/`, {
         method: 'POST',
         headers: {
@@ -115,17 +123,20 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
           if (newAccessToken) {
             return handleSubmit(e, retryCount - 1);
           } else {
-            throw new Error(`Ошибка в создании токена`);
+            throw new Error(INVALID_CREATE_TOKEN_ERROR);
           }
         } else throw new Error(`Ошибка ${response.status}`);
-      } else {
-        setSelectedImages([]);
       }
     } catch (error) {
       console.error('Error:', error.message);
-      navigate('/');
+      if (error.message === INVALID_CREATE_TOKEN_ERROR) {
+        navigate('/');
+      } else {
+        rejectToast('Не удалось отправить сообщение');
+      }
     } finally {
-      setIsRecording(false);
+      setSelectedImages([]);
+      setInputValueAtPreview('');
       setIsLoading(false);
     }
   };
@@ -169,9 +180,13 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
       }
     } catch (error) {
       console.error('Error:', error.message);
-      navigate('/');
+      if (error.message === INVALID_CREATE_TOKEN_ERROR) {
+        navigate('/');
+      } else {
+        rejectToast('Не удалось отправить сообщение');
+      }
     } finally {
-      setIsRecording(false);
+      setInputValue('');
       setIsLoading(false);
     }
   };
@@ -399,6 +414,17 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
               </button>
             </div>
           ))}
+        </div>
+        <div>
+          <input
+            className={styles.inputAtPreviewMessage}
+            value={inputValueAtPreview}
+            onChange={(e) => setInputValueAtPreview(e.currentTarget.value)}
+            name="message-text-at-preview"
+            placeholder="Введите сообщение"
+            type="text"
+            autoComplete="off"
+          />
         </div>
       </Modal>
     </section>

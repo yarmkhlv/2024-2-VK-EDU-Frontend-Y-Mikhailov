@@ -132,7 +132,11 @@ export function SectionEditProfile({ currentUser }) {
       }
     } catch (error) {
       console.error('Error:', error.message);
-      rejectToast('Произошла ошибка. Данные не сохранены.');
+      if (error.message === 'Failed to fetch') {
+        rejectToast('Не удалось редактировать информацию, попробуйте позже.');
+      } else {
+        rejectToast('Произошла ошибка. Данные не сохранены.');
+      }
     } finally {
       setIsLoading(false);
     }
