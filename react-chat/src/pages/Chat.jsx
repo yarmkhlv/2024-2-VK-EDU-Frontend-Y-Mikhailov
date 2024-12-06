@@ -3,8 +3,10 @@ import { useEffect, useState, useRef } from 'react';
 import { HeaderChat } from '../components/widgets/HeaderChat/HeaderChat';
 import { SectionChat } from '../components/widgets/SectionChat/SectionChat';
 import { SectionInput } from '../components/widgets/SectionInput/SectionInput';
+import { Dropzone } from '../components/shared/Dropzone/Dropzone';
 import { useAuth } from '../components/providers/helpers/useAuth';
 import { useInfoChat, useCentrifugo, useCurrentUser } from '../utils/API/hooks';
+import { rejectToast } from '../utils/toastes/toastes';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -21,12 +23,13 @@ export function Chat() {
 
   const [messages, setMessages] = useState([]);
   const [countMessages, setCountMessages] = useState(0);
+  const [selectedImages, setSelectedImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const messagesContainerRef = useRef(null);
   const [lastHeight, setLastHeight] = useState(null);
 
-  useCentrifugo(currentUser, setMessages, setCountMessages);
+  useCentrifugo(id, currentUser, setMessages, setCountMessages);
 
   const getMessages = async (page, retryCount = 1) => {
     if (countMessages && messages.length >= countMessages) return;
@@ -79,6 +82,24 @@ export function Chat() {
     }
   };
 
+  const handleDrop = (e) => {
+    const files = Array.from(e.dataTransfer.files).filter((file) =>
+      file.type.startsWith('image/')
+    );
+
+    const previews = files.map((file) => {
+      return {
+        file,
+        previewUrl: URL.createObjectURL(file),
+      };
+    });
+    if (previews.length > 5) {
+      rejectToast('Можно загрузить не больше 5 файлов');
+      return;
+    }
+    setSelectedImages(previews);
+  };
+
   useEffect(() => {
     if (accessToken) {
       getMessages();
@@ -104,12 +125,13 @@ export function Chat() {
   }, [messages, lastHeight]);
 
   return (
-    <>
+    <Dropzone handleDrop={handleDrop}>
       <HeaderChat
         title={infoChat?.title}
         avatar={infoChat?.avatar}
         is_private={infoChat?.is_private}
       />
+
       <main className="main">
         <SectionChat
           messages={messages}
@@ -118,8 +140,12 @@ export function Chat() {
           messagesContainerRef={messagesContainerRef}
           handleScrollMessages={handleScrollMessages}
         />
-        <SectionInput id={id} />
+        <SectionInput
+          id={id}
+          selectedImages={selectedImages}
+          setSelectedImages={setSelectedImages}
+        />
       </main>
-    </>
+    </Dropzone>
   );
 }

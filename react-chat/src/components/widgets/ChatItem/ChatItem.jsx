@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-
+import { countImageMessage } from './helpers/countImageMessage';
 import { convertDate } from '../../../utils/convertDate';
 import styles from './chatItem.module.scss';
 
@@ -10,6 +10,19 @@ export function ChatItem({ title, avatar, last_message, id, is_private }) {
         .map((el) => el[0])
         .join('')
     : title[0];
+
+  const lastMessageTextRender = (() => {
+    if (last_message?.voice) {
+      return 'Голосовое сообщение';
+    } else if (last_message?.files.length > 0) {
+      const imageMessage = countImageMessage(last_message.files.length);
+      return imageMessage;
+    } else if (last_message?.text) {
+      return last_message.text;
+    } else {
+      return 'Пока сообщений нет';
+    }
+  })();
 
   return (
     <Link to={`/chat/${id}`} className={styles.link}>
@@ -25,7 +38,6 @@ export function ChatItem({ title, avatar, last_message, id, is_private }) {
             <span className={styles.initials}>{avatarInitials}</span>
           )}
         </div>
-
         <div className={styles.userInfo}>
           <div className={styles.userInfoUpper}>
             <div className={styles.infoUpperTitle}>{title}</div>
@@ -35,9 +47,7 @@ export function ChatItem({ title, avatar, last_message, id, is_private }) {
               </div>
             )}
           </div>
-          {last_message && (
-            <div className={styles.userInfoBottom}>{last_message.text}</div>
-          )}
+          <div className={styles.userInfoBottom}>{lastMessageTextRender}</div>
         </div>
       </div>
     </Link>

@@ -52,3 +52,21 @@
 .newMessage {
   animation: showNewMessage 0.5s forwards;
 }
+
+.imgContainer {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+}
+.img {
+  border-radius: 8px;
+}
+
+.audioContainer {
+  audio {
+    display: none;
+  }
+
+  display: flex;
+  align-items: center;
+}

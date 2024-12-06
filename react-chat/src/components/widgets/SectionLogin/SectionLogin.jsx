@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../providers/helpers/useAuth';
 import styles from './sectionLogin.module.scss';
+import { rejectToast } from '../../../utils/toastes/toastes';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -47,7 +48,7 @@ export function SectionLogin() {
 
       if (!response.ok) {
         const dataError = await response.json();
-
+        console.log(dataError, 'dataError');
         setErrors((prev) => ({ ...prev, ...dataError }));
         throw new Error(`Ошибка ${response.status}`);
       } else {
@@ -58,6 +59,9 @@ export function SectionLogin() {
       }
     } catch (error) {
       console.error('Error:', error.message);
+      if (error.message === 'Failed to fetch') {
+        rejectToast('Не удалось авторизоваться, попробуйте позже.');
+      }
     }
   };
 

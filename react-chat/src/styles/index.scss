@@ -15,7 +15,7 @@ body {
 }
 
 .main {
-  height: calc(100vh - var(--header-height));
+  height: calc(100vh - var(--header-height) - env(safe-area-inset-bottom));
 
   display: flex;
   flex-direction: column;

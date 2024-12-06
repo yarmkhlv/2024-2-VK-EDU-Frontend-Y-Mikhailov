@@ -19,4 +19,6 @@
 .containerUserList {
   height: calc(100% - var(--header-height));
   overflow-y: auto;
+
+  padding: 5px;
 }

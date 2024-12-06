@@ -3,10 +3,17 @@ import { convertDate } from '../../../../../utils/convertDate';
 import styles from './generalMessage.module.scss';
 
 export function GeneralMessage({ currentUserId, messageData }) {
-  const { sender, text, created_at } = messageData;
+  const { sender, text, voice, created_at, files } = messageData;
   return currentUserId === sender.id ? (
     <div className={clsx(styles.message, styles.newMessage, styles.ownPerson)}>
-      {text}
+      {voice ? (
+        <audio>
+          <source src={voice} type="audio/wav" />
+          Ваш браузер не поддерживает аудиовоспроизведение.
+        </audio>
+      ) : (
+        text
+      )}
       <span className={styles.timeMessage}>{convertDate(created_at)}</span>
     </div>
   ) : (
@@ -33,7 +40,21 @@ export function GeneralMessage({ currentUserId, messageData }) {
       <div className={styles.blockWithText}>
         <div className={clsx(styles.username)}>{sender.username}</div>
         <div className={styles.message}>
-          {text}
+          {voice ? (
+            <audio controls>
+              <source src={voice} type="audio/wav" />
+              Ваш браузер не поддерживает аудиовоспроизведение.
+            </audio>
+          ) : files.length > 0 ? (
+            <div className={styles.imgContainer}>
+              {files.map((el, i) => (
+                <img className={styles.img} key={i} src={el.item} />
+              ))}
+              {text}
+            </div>
+          ) : (
+            text
+          )}
           <span className={styles.timeMessage}>{convertDate(created_at)}</span>
         </div>
       </div>

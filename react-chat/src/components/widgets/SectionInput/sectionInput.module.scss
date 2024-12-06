@@ -1,3 +1,6 @@
+@use '../../../styles/base/breakpoints.scss' as *;
+@use '../../../styles/base/variables.scss' as *;
+
 .section {
   width: 100%;
   margin-top: auto;
@@ -7,8 +10,12 @@
 }
 
 .container {
-  max-width: 750px;
+  max-width: 700px;
   margin: 0 auto;
+
+  @include tablet {
+    padding: 0 16px;
+  }
 }
 
 .form {
@@ -17,20 +24,51 @@
   justify-content: space-between;
   column-gap: 10px;
 }
+
+.inputContainer {
+  position: relative;
+
+  flex: 1;
+
+  display: flex;
+}
+
+.inputContainer.recordingProcess::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: red;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+  animation: recording-blink-like-macos 1.5s infinite;
+}
+
 .input {
   flex: 1;
 
   height: 56px;
-  padding: 8px;
+  padding: 8px 40px 8px 8px;
 
   border-radius: 8px;
 
   background-color: #f0f0f3;
 
   font-size: 18px;
+
+  &.inputDisabled {
+    background-color: #c7c7c7;
+  }
 }
 
-.submitBtn {
+.submitBtn,
+.voiceBtn,
+.attachBtn,
+.delBtn,
+.doneBtn,
+.closeBtn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -42,4 +80,169 @@
   }
 
   padding: 8px;
+}
+
+.delBtn {
+  &:hover {
+    svg {
+      color: red;
+    }
+  }
+}
+
+.attachBtn {
+  position: absolute;
+
+  right: 0px;
+
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.attachData {
+  z-index: 1;
+  position: absolute;
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+
+  width: 170px;
+  top: -100px;
+  right: 0px;
+
+  padding: 5px;
+
+  background-color: #fff;
+
+  border: 1px solid rgb(190, 175, 175);
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  .attachItem {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+
+    padding: 10px;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--color-gray);
+      transition: background-color 0.5s ease;
+      svg {
+        color: #007bff;
+        transition: color 0.5s ease;
+      }
+    }
+  }
+
+  .imageInput {
+    display: none;
+  }
+}
+
+.btnsProcessRecorderContainer {
+  display: flex;
+  align-items: center;
+}
+
+@keyframes recording-blink-like-macos {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.additionalModalContent {
+  max-height: 500px;
+  height: unset;
+  max-width: 400px;
+  overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.modalHeader {
+  height: 56px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  font-size: 18px;
+  font-weight: 500;
+
+  padding: 0 10px;
+}
+
+.modalBody {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 5px;
+
+  border-radius: 8px;
+}
+
+.inputAtPreviewMessage {
+  height: 56px;
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  background-color: #f0f0f3;
+  font-size: 18px;
+}
+
+.item {
+  flex: 1 1 calc(50% - 5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.removeImageBtn {
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  right: 10px;
+  top: 10px;
+
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border-radius: 50%;
+
+  box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.75);
+
+  cursor: pointer;
+
+  &:hover {
+    svg {
+      color: #007bff;
+      transition: color 0.5s ease;
+    }
+  }
 }

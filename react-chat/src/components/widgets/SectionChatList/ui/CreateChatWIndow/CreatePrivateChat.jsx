@@ -54,11 +54,12 @@ export function CreatePrivateChat({ onClickReturn }) {
           setLastPage(convertCountToLastPage);
         }
         setUserList((prev) => [...prev, ...results]);
-        setIsLoading(false);
       }
     } catch (error) {
       console.error('Error:', error.message);
       navigate('/');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -81,7 +82,7 @@ export function CreatePrivateChat({ onClickReturn }) {
           }
         } else if (response.status === 400) {
           const dataError = await response.json();
-          const isAlready = dataError.members?.[0] === IS_ALREADY_EXIST;
+          const isAlready = dataError[0] === IS_ALREADY_EXIST;
           if (isAlready) {
             successToast('Чат с данным пользователем уже существует.', 3000);
             onClickReturn();
