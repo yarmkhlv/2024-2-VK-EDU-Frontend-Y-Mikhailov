@@ -1,15 +1,20 @@
 import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Centrifuge } from 'centrifuge';
-import { useAuth } from '../../../components/providers/helpers/useAuth';
+import {
+  addMessage,
+  updateMessage,
+  deleteMessage,
+} from '../../../store/messages/slice';
 import { showNotification } from '../../showNotification';
+import { ENDPOINTS } from '../endpoints';
 
-const API_URL = import.meta.env.VITE_API_URL;
-
-export function useCentrifugo(id, currentUser, setMessages, setCountMessages) {
-  const { accessToken } = useAuth();
+export function useCentrifugo(id, currentUser) {
+  const dispatch = useDispatch();
+  const accessToken = useSelector((state) => state.auth.accessToken);
 
   const getConnectionToken = async () => {
-    const response = await fetch(`${API_URL}/centrifugo/connect/`, {
+    const response = await fetch(ENDPOINTS.CENTRIFUGO.CONNECT, {
       method: 'POST',
       headers: { Authorization: `Bearer ${accessToken}` },
     });
@@ -18,7 +23,7 @@ export function useCentrifugo(id, currentUser, setMessages, setCountMessages) {
   };
 
   const getSubscriptionToken = async () => {
-    const response = await fetch(`${API_URL}/centrifugo/subscribe/`, {
+    const response = await fetch(ENDPOINTS.CENTRIFUGO.SUBSCRIBE, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -30,7 +35,7 @@ export function useCentrifugo(id, currentUser, setMessages, setCountMessages) {
   };
 
   useEffect(() => {
-    if (!accessToken || !currentUser || !setMessages) return;
+    if (!accessToken || !currentUser) return;
 
     let centrifuge;
     let subscription;
@@ -40,12 +45,9 @@ export function useCentrifugo(id, currentUser, setMessages, setCountMessages) {
       const subscribeToken = await getSubscriptionToken();
 
       if (!centrifuge) {
-        centrifuge = new Centrifuge(
-          'wss://vkedu-fullstack-div2.ru/connection/websocket/',
-          {
-            getToken: () => Promise.resolve(connectToken),
-          }
-        );
+        centrifuge = new Centrifuge(ENDPOINTS.CONNECTION_WEBSOCKET, {
+          getToken: () => Promise.resolve(connectToken),
+        });
       }
 
       if (!subscription) {
@@ -56,31 +58,17 @@ export function useCentrifugo(id, currentUser, setMessages, setCountMessages) {
         subscription.on('publication', (ctx) => {
           const { event, message } = ctx.data;
           const isCurrentChat = id === message.chat;
-          if (event === 'create') {
-            setMessages((prevMessages) => {
-              if (
-                prevMessages.some(
-                  (msg) => msg.id === message.id || !isCurrentChat
-                )
-              ) {
-                if (!isCurrentChat) {
-                  showNotification(message);
-                }
-                return prevMessages;
-              }
-              return [message, ...prevMessages];
-            });
-            if (setCountMessages) {
-              setCountMessages((prev) => prev + 1);
+
+          if (!isCurrentChat) {
+            showNotification(message);
+          } else {
+            if (event === 'create') {
+              dispatch(addMessage(message));
+            } else if (event === 'update') {
+              dispatch(updateMessage(message));
+            } else if (event === 'delete') {
+              dispatch(deleteMessage(message.id));
             }
-          } else if (event === 'update') {
-            setMessages((prevMessages) =>
-              prevMessages.map((msg) => (msg.id === message.id ? message : msg))
-            );
-          } else if (event === 'delete') {
-            setMessages((prevMessages) =>
-              prevMessages.filter((msg) => msg.id !== message.id)
-            );
           }
         });
 
@@ -99,5 +87,5 @@ export function useCentrifugo(id, currentUser, setMessages, setCountMessages) {
         centrifuge.disconnect();
       }
     };
-  }, [accessToken, currentUser, setMessages]);
+  }, [accessToken, currentUser]);
 }

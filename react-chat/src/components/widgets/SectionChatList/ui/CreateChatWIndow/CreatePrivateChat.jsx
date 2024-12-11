@@ -1,102 +1,44 @@
 import { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../../../../providers/helpers/useAuth';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchUserList,
+  updateUserList,
+} from '../../../../../store/userList/thunk';
+import { createPrivateChat } from '../../../../../store/chatList/thunk';
+import { useNavigate } from 'react-router-dom';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import styles from './createPrivateChat.module.scss';
-import { useNavigate } from 'react-router-dom';
 import { UserItem } from '../../../UserItem/UserItem';
-import { successToast } from '../../../../../utils/toastes/toastes';
+import {
+  rejectToast,
+  successToast,
+} from '../../../../../utils/toastes/toastes';
 
-const API_URL = import.meta.env.VITE_API_URL;
-
-const COUNT_USER_PAGES = 20;
 const IS_ALREADY_EXIST = 'Private chat with these members already exists';
 
 export function CreatePrivateChat({ onClickReturn }) {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { accessToken, refreshAccessToken } = useAuth();
-
-  const [userList, setUserList] = useState([]);
-
-  const [page, setPage] = useState(1);
-  const [lastPage, setLastPage] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const { userList, isLoading, nextPageUrl } = useSelector(
+    (state) => state.userList
+  );
   const userListContainerRef = useRef(null);
   const [lastHeight, setLastHeight] = useState(null);
 
-  const getUsers = async (page, retryCount = 1) => {
-    if (lastPage && page >= lastPage) return;
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        `${API_URL}/users/?page=${page}&page_size=${COUNT_USER_PAGES}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+  const handleClickUser = (userId) => {
+    dispatch(createPrivateChat(userId))
+      .unwrap()
+      .then((data) => navigate(`/chat/${data.id}`))
+      .catch((error) => {
+        if (error === IS_ALREADY_EXIST) {
+          successToast('Чат с данным пользователем уже существует.', 3000);
+          onClickReturn();
+        } else {
+          console.error('Ошибка создания чата:', error);
+          rejectToast(`Ошибка создания чата:, ${error}`, 3000);
         }
-      );
-
-      if (!response.ok) {
-        if (response.status === 401 && retryCount > 0) {
-          const newAccessToken = await refreshAccessToken();
-          if (newAccessToken) {
-            return getUsers(page, retryCount - 1);
-          }
-        } else throw new Error(`Ошибка ${response.status}`);
-      } else {
-        const data = await response.json();
-        const { count, results } = data;
-        if (!lastPage) {
-          const convertCountToLastPage = Math.ceil(count / COUNT_USER_PAGES);
-          setLastPage(convertCountToLastPage);
-        }
-        setUserList((prev) => [...prev, ...results]);
-      }
-    } catch (error) {
-      console.error('Error:', error.message);
-      navigate('/');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleClickUser = async (userId, retryCount = 1) => {
-    try {
-      const response = await fetch(`${API_URL}/chats/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({ is_private: true, members: [userId] }),
       });
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          const newAccessToken = await refreshAccessToken();
-          if (newAccessToken) {
-            return handleClickUser(userId, retryCount - 1);
-          }
-        } else if (response.status === 400) {
-          const dataError = await response.json();
-          const isAlready = dataError[0] === IS_ALREADY_EXIST;
-          if (isAlready) {
-            successToast('Чат с данным пользователем уже существует.', 3000);
-            onClickReturn();
-          } else throw new Error(`Ошибка ${response.status}`);
-        } else throw new Error(`Ошибка ${response.status}`);
-      } else {
-        const data = await response.json();
-
-        navigate(`/chat/${data.id}`);
-      }
-    } catch (error) {
-      console.error('Error:', error.message);
-      navigate('/');
-    }
   };
 
   const handleScroll = (e) => {
@@ -107,9 +49,7 @@ export function CreatePrivateChat({ onClickReturn }) {
 
     if (isBottom && !isLoading) {
       setLastHeight(scrollHeight);
-      const newPageNumber = page + 1;
-      setPage(newPageNumber);
-      getUsers(newPageNumber);
+      dispatch(updateUserList(nextPageUrl));
     }
   };
 
@@ -128,15 +68,13 @@ export function CreatePrivateChat({ onClickReturn }) {
   }, [userList]);
 
   useEffect(() => {
-    if (accessToken) {
-      getUsers(page);
-    } else {
-      navigate('/');
+    if (userList.length === 0) {
+      dispatch(fetchUserList());
     }
-  }, [accessToken]);
+  }, [dispatch, userList.length]);
 
   if (renderUserList?.length < 1) return null;
-
+  if (userList.length < 1) return <div>Пользователи загружаются</div>;
   return (
     <>
       <div className={styles.header}>

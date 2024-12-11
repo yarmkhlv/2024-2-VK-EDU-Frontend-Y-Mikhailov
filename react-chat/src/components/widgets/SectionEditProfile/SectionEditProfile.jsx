@@ -1,16 +1,18 @@
 import { useId, useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  fetchCurrentUser,
+  updateCurrentUser,
+} from '../../../store/currentUser/thunk';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import styles from './sectionEditProfile.module.scss';
 import { validateField } from '../../../utils/validateField';
 import { MIN_VALID_LENGTH_USER_NAME } from '../../../utils/variables';
-import { useAuth } from '../../providers/helpers/useAuth';
 import { successToast, rejectToast } from '../../../utils/toastes/toastes';
 
-const API_URL = import.meta.env.VITE_API_URL;
-
-export function SectionEditProfile({ currentUser }) {
-  const { accessToken, refreshAccessToken } = useAuth();
-
+export function SectionEditProfile() {
+  const dispatch = useDispatch();
+  const { data, isLoading } = useSelector((state) => state.currentUser);
   const refAvatarInput = useRef(null);
 
   const nameInputId = useId();
@@ -24,7 +26,7 @@ export function SectionEditProfile({ currentUser }) {
 
   const [formIsChanged, setFormIsChanged] = useState(false);
 
-  const [data, setData] = useState({
+  const [currentUserEditor, setCurrentUserEditor] = useState({
     firstname: '',
     lastname: '',
     username: '',
@@ -39,13 +41,11 @@ export function SectionEditProfile({ currentUser }) {
     avatar: '',
   });
 
-  const [isLoading, setIsLoading] = useState(false);
-
   const validateFields = () => {
-    const textErrorFirstName = validateField(data.firstname, true);
-    const textErrorLastName = validateField(data.lastname, true);
+    const textErrorFirstName = validateField(currentUserEditor.firstname, true);
+    const textErrorLastName = validateField(currentUserEditor.lastname, true);
     const textErrorUserName = validateField(
-      data.username,
+      currentUserEditor.username,
       true,
       MIN_VALID_LENGTH_USER_NAME
     );
@@ -61,84 +61,57 @@ export function SectionEditProfile({ currentUser }) {
     return true;
   };
 
-  const handleSubmitForm = async (e, retryCount = 1) => {
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
     if (isLoading) return;
     if (!formIsChanged) {
       rejectToast('Вы не внесли изменений.');
       return;
     }
-    setIsLoading(true);
     const isValid = validateFields();
 
     if (!isValid) {
-      setIsLoading(false);
-
       return;
     }
     const formData = new FormData();
-    const trimmedFirstName = data.firstname.trim();
-    const trimmedLastName = data.lastname.trim();
-    const trimmedUserName = data.username.trim();
-    const trimmedBio = data.bio.trim();
+    const trimmedFirstName = currentUserEditor.firstname.trim();
+    const trimmedLastName = currentUserEditor.lastname.trim();
+    const trimmedUserName = currentUserEditor.username.trim();
+    const trimmedBio = currentUserEditor.bio.trim();
 
-    if (trimmedFirstName !== currentUser.firstname) {
+    if (trimmedFirstName !== data.firstname) {
       formData.append('first_name', trimmedFirstName);
     }
-    if (trimmedLastName !== currentUser.lastname) {
+    if (trimmedLastName !== data.lastname) {
       formData.append('last_name', trimmedLastName);
     }
-    if (trimmedUserName !== currentUser.username) {
+    if (trimmedUserName !== data.username) {
       formData.append('username', trimmedUserName);
     }
-    if (trimmedBio !== currentUser.bio) {
+    if (trimmedBio !== data.bio) {
       formData.append('bio', trimmedBio);
     }
-    if (data.avatar) {
-      formData.append('avatar', data.avatar);
+    if (currentUserEditor.avatar) {
+      formData.append('avatar', currentUserEditor.avatar);
     }
 
     try {
-      const response = await fetch(`${API_URL}/user/${id}`, {
-        method: 'PATCH',
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const resultAction = await dispatch(updateCurrentUser({ id, formData }));
 
-      if (!response.ok) {
-        if (response.status === 400) {
-          const dataErrors = await response.json();
-          const formattedErrors = Object.keys(dataErrors).reduce((acc, key) => {
-            acc[key] = dataErrors[key].join('; ');
-            return acc;
-          }, {});
-          setErrors(formattedErrors);
-        }
-        if (response.status === 401 && retryCount > 0) {
-          const newAccessToken = await refreshAccessToken();
-          if (newAccessToken) {
-            return handleSubmitForm(e, retryCount - 1);
-          } else {
-            throw new Error('Unable to refresh access token.');
-          }
-        } else {
-          throw new Error(`Произошла ошибка ${response.status}`);
-        }
-      } else {
+      if (updateCurrentUser.fulfilled.match(resultAction)) {
         successToast('Профиль успешно обновлен!');
         setFormIsChanged(false);
+      } else {
+        const error =
+          resultAction.payload || 'Произошла ошибка. Данные не сохранены.';
+        rejectToast(error);
+        if (resultAction.payload && typeof resultAction.payload === 'object') {
+          setErrors(resultAction.payload);
+        }
       }
     } catch (error) {
       console.error('Error:', error.message);
-      if (error.message === 'Failed to fetch') {
-        rejectToast('Не удалось редактировать информацию, попробуйте позже.');
-      } else {
-        rejectToast('Произошла ошибка. Данные не сохранены.');
-      }
-    } finally {
-      setIsLoading(false);
+      rejectToast('Произошла ошибка. Данные не сохранены.');
     }
   };
 
@@ -146,7 +119,7 @@ export function SectionEditProfile({ currentUser }) {
     setErrors((prev) => ({ ...prev, avatar: null }));
     const file = e.target.files[0];
     if (file) {
-      setData((prev) => ({ ...prev, avatar: file }));
+      setCurrentUserEditor((prev) => ({ ...prev, avatar: file }));
       setAvatarPreview(URL.createObjectURL(file));
     } else {
       setAvatarPreview('');
@@ -158,7 +131,7 @@ export function SectionEditProfile({ currentUser }) {
     const value = e.target.value;
 
     setErrors((prev) => ({ ...prev, detail: null, [name]: null }));
-    setData((prev) => ({ ...prev, detail: null, [name]: value }));
+    setCurrentUserEditor((prev) => ({ ...prev, detail: null, [name]: value }));
     setFormIsChanged(true);
   };
 
@@ -168,15 +141,20 @@ export function SectionEditProfile({ currentUser }) {
   };
 
   useEffect(() => {
-    if (currentUser) {
-      setId(currentUser.id || '');
-      setAvatarPreview(currentUser.avatar || '');
-      setData((prev) => ({ ...prev, firstname: currentUser.first_name }));
-      setData((prev) => ({ ...prev, lastname: currentUser.last_name }));
-      setData((prev) => ({ ...prev, username: currentUser.username }));
-      setData((prev) => ({ ...prev, bio: currentUser.bio }));
+    if (!data) {
+      dispatch(fetchCurrentUser());
+    } else {
+      setId(data.id || '');
+      setAvatarPreview(data.avatar || '');
+      setCurrentUserEditor({
+        firstname: data.first_name || '',
+        lastname: data.last_name || '',
+        username: data.username || '',
+        bio: data.bio || '',
+        avatar: null,
+      });
     }
-  }, [currentUser]);
+  }, [dispatch, data]);
 
   return (
     <section className={styles.section} tabIndex="-1">
@@ -234,7 +212,7 @@ export function SectionEditProfile({ currentUser }) {
             </label>
             <input
               id={nameInputId}
-              value={data.firstname}
+              value={currentUserEditor.firstname}
               onChange={handleChangeInput}
               autoComplete="false"
               className={styles.input}
@@ -253,7 +231,7 @@ export function SectionEditProfile({ currentUser }) {
             </label>
             <input
               id={fioInputId}
-              value={data.lastname}
+              value={currentUserEditor.lastname}
               onChange={handleChangeInput}
               autoComplete="false"
               className={styles.input}
@@ -273,7 +251,7 @@ export function SectionEditProfile({ currentUser }) {
           </label>
           <input
             id={userNameInputId}
-            value={data.username}
+            value={currentUserEditor.username}
             className={styles.input}
             autoComplete="false"
             name="username"
@@ -295,7 +273,7 @@ export function SectionEditProfile({ currentUser }) {
           </label>
           <textarea
             id={bioTextAreaId}
-            value={data.bio}
+            value={currentUserEditor.bio}
             name="bio"
             onChange={handleChangeInput}
             className={styles.textarea}

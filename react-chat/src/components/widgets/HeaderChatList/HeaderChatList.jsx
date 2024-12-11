@@ -1,11 +1,25 @@
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
+import { clearTokens } from '../../../store/auth/slice';
+
 import { Link } from 'react-router-dom';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import styles from './headerChatList.module.scss';
 
 export function HeaderChatList() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(clearTokens());
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('refreshToken');
+    navigate('/', { replace: true });
+  };
   return (
     <header className={styles.header}>
       <div className={styles.container}>
@@ -22,6 +36,11 @@ export function HeaderChatList() {
             <div className={styles.searchButtonBlock}>
               <button className={styles.searchButton}>
                 <SearchIcon sx={{ color: '#837d7d' }} />
+              </button>
+            </div>
+            <div className={styles.logoutButtonBlock}>
+              <button onClick={handleLogout} className={styles.logoutButton}>
+                <LogoutIcon sx={{ color: '#837d7d' }} />
               </button>
             </div>
           </div>
