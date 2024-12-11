@@ -3,7 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
-import { clearTokens, setRefreshToken } from '../../store/auth/slice';
+import {
+  clearTokens,
+  setRefreshToken,
+  setTokens,
+  setAuthChecking,
+} from '../../store/auth/slice';
 import { refreshTokens } from '../../store/auth/thunk';
 
 const REFRESH_INTERVAL = 25 * 60 * 1000; // 25 минут в миллисекундах
@@ -26,21 +31,38 @@ export function AuthProvider({ children }) {
   };
 
   useEffect(() => {
-    const storedRefreshToken = sessionStorage.getItem('refreshToken');
+    const checkAuth = async () => {
+      dispatch(setAuthChecking(true));
 
-    if (storedRefreshToken) {
-      const decoded = jwtDecode(storedRefreshToken);
-      const expirationTime = decoded.exp * 1000;
-      const now = Date.now();
+      const storedAccessToken = sessionStorage.getItem('accessToken');
+      const storedRefreshToken = sessionStorage.getItem('refreshToken');
 
-      if (expirationTime - now > REFRESH_INTERVAL) {
-        dispatch(setRefreshToken(storedRefreshToken));
+      if (storedRefreshToken) {
+        const decoded = jwtDecode(storedRefreshToken);
+        const expirationTime = decoded.exp * 1000;
+        const now = Date.now();
+
+        if (expirationTime - now > REFRESH_INTERVAL) {
+          if (storedAccessToken) {
+            dispatch(
+              setTokens({
+                accessToken: storedAccessToken,
+                refreshToken: storedRefreshToken,
+              })
+            );
+          } else {
+            dispatch(setRefreshToken(storedRefreshToken));
+          }
+        } else {
+          handleLogout();
+        }
       } else {
         handleLogout();
       }
-    } else {
-      handleLogout();
-    }
+      dispatch(setAuthChecking(false));
+    };
+
+    checkAuth();
   }, [dispatch]);
 
   useEffect(() => {

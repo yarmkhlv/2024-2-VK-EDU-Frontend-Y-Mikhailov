@@ -13,7 +13,7 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
   const chatListRef = useRef(null);
 
   const dispatch = useDispatch();
-
+  const { isAuthChecking } = useSelector((state) => state.auth);
   const { chatList, isLoading, nextPageUrl } = useSelector(
     (state) => state.chatList
   );
@@ -66,6 +66,7 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
   }, [chatList, isLoading, nextPageUrl]);
 
   useEffect(() => {
+    if (isAuthChecking) return;
     if (chatList.length === 0) {
       dispatch(fetchChatList());
     }
@@ -73,7 +74,11 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
     return () => {
       dispatch(resetChatState());
     };
-  }, [dispatch]);
+  }, [dispatch, isAuthChecking]);
+
+  if (isAuthChecking) {
+    return <div>Загрузка...</div>;
+  }
 
   return (
     <section className={styles.section} tabIndex="-1">
