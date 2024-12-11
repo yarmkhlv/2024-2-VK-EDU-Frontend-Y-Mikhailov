@@ -1,65 +1,30 @@
 import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ChatItem } from '../ChatItem/ChatItem';
-import { useAuth } from '../../providers/helpers/useAuth';
 import { Menu } from './ui/Menu/Menu';
-import { rejectToast } from '../../../utils/toastes/toastes';
+import { fetchChatList, updateChatList } from '../../../store/chatList/thunk';
+import { resetChatState } from '../../../store/chatList/slice';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './sectionChatList.module.scss';
 import clsx from 'clsx';
-import { useNavigate } from 'react-router-dom';
-
-const API_URL = import.meta.env.VITE_API_URL;
-
-const INVALID_CREATE_TOKEN_ERROR = `Ошибка в создании токена`;
 
 export function SectionChatList({ openModal, setTypeCreateChat }) {
-  const navigate = useNavigate();
-
   const chatListRef = useRef(null);
 
-  const { accessToken, refreshAccessToken } = useAuth();
+  const dispatch = useDispatch();
 
-  const [chatList, setChatList] = useState([]);
+  const { chatList, isLoading, nextPageUrl } = useSelector(
+    (state) => state.chatList
+  );
+
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const [fetchUrl, setFetchUrl] = useState(`${API_URL}/chats/?page_size=10`);
-  const [isLoading, setIsLoading] = useState(false);
 
   const [lastHeight, setLastHeight] = useState(null);
 
-  const fetchChats = async (retryCount = 1) => {
-    if (!fetchUrl || isLoading) return;
-    setIsLoading(true);
-    try {
-      const response = await fetch(fetchUrl, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
-      if (!response.ok) {
-        if (response.status === 401 && retryCount > 0) {
-          const newAccessToken = await refreshAccessToken();
-          if (newAccessToken) {
-            return fetchChats(retryCount - 1);
-          }
-        } else throw new Error(`Ошибка ${response.status}`);
-      } else {
-        const data = await response.json();
-
-        const { next, results } = data;
-        setChatList((prev) => [...prev, ...results]);
-        setFetchUrl(next);
-      }
-    } catch (error) {
-      console.error('Error:', error.message);
-      if (error.message === INVALID_CREATE_TOKEN_ERROR) {
-        navigate('/');
-      } else {
-        rejectToast('Не удалось загрузить предыдущие чаты.');
-      }
-    } finally {
-      setIsLoading(false);
+  const loadMoreChats = () => {
+    if (nextPageUrl) {
+      dispatch(updateChatList(nextPageUrl));
     }
   };
 
@@ -79,7 +44,7 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
     const isBottom = scrollHeight - (scrollTop + clientHeight) < 1;
     if (isBottom && !isLoading) {
       setLastHeight(scrollHeight);
-      fetchChats();
+      loadMoreChats();
     }
   };
 
@@ -90,12 +55,25 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
   }, [chatList]);
 
   useEffect(() => {
-    if (accessToken) {
-      fetchChats();
-    } else {
-      navigate('/');
+    if (chatListRef.current) {
+      const containerElement = chatListRef.current;
+      const { scrollHeight, clientHeight } = containerElement;
+
+      if (scrollHeight <= clientHeight && !isLoading && nextPageUrl) {
+        loadMoreChats();
+      }
     }
-  }, [accessToken]);
+  }, [chatList, isLoading, nextPageUrl]);
+
+  useEffect(() => {
+    if (chatList.length === 0) {
+      dispatch(fetchChatList());
+    }
+
+    return () => {
+      dispatch(resetChatState());
+    };
+  }, [dispatch]);
 
   return (
     <section className={styles.section} tabIndex="-1">

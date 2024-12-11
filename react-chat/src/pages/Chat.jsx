@@ -1,84 +1,43 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { HeaderChat } from '../components/widgets/HeaderChat/HeaderChat';
 import { SectionChat } from '../components/widgets/SectionChat/SectionChat';
 import { SectionInput } from '../components/widgets/SectionInput/SectionInput';
 import { Dropzone } from '../components/shared/Dropzone/Dropzone';
-import { useAuth } from '../components/providers/helpers/useAuth';
-import { useInfoChat, useCentrifugo, useCurrentUser } from '../utils/API/hooks';
+import { useCentrifugo } from '../utils/API/hooks';
 import { rejectToast } from '../utils/toastes/toastes';
-
-const API_URL = import.meta.env.VITE_API_URL;
-
-const COUNT_MESSAGE_PAGES = 30;
+import { getMessages, updateMessages } from '../store/messages/thunk';
+import { fetchCurrentUser } from '../store/currentUser/thunk';
+import { getInfoChat } from '../store/currentChat/thunk';
+import { resetCurrentChatState } from '../store/currentChat/slice';
+import { resetCurrentUserState } from '../store/currentUser/slice';
+import { resetMessagesState } from '../store/messages/slice';
 
 export function Chat() {
+  const dispatch = useDispatch();
   const { id } = useParams();
-  const navigate = useNavigate();
+  const currentUser = useSelector((state) => state.currentUser.data);
+  const chatInfo = useSelector((state) => state.currentChat.data);
+  const { messages, isLoading, nextPageUrl } = useSelector(
+    (state) => state.messages
+  );
 
-  const { accessToken, refreshAccessToken } = useAuth();
-  const { currentUser } = useCurrentUser();
-
-  const { infoChat } = useInfoChat(id);
-
-  const [messages, setMessages] = useState([]);
-  const [countMessages, setCountMessages] = useState(0);
   const [selectedImages, setSelectedImages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const messagesContainerRef = useRef(null);
   const [lastHeight, setLastHeight] = useState(null);
 
-  useCentrifugo(id, currentUser, setMessages, setCountMessages);
-
-  const getMessages = async (page, retryCount = 1) => {
-    if (countMessages && messages.length >= countMessages) return;
-    setIsLoading(true);
-    const calcNextPage = Math.trunc(messages.length / COUNT_MESSAGE_PAGES) + 1;
-    try {
-      const response = await fetch(
-        `${API_URL}/messages?chat=${id}&page=${calcNextPage}&page_size=${COUNT_MESSAGE_PAGES}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        if (response.status === 401 && retryCount > 0) {
-          const newAccessToken = await refreshAccessToken();
-          if (newAccessToken) {
-            return getMessages(page, retryCount - 1);
-          } else {
-            throw new Error('Unable to refresh access token.');
-          }
-        } else throw new Error(`Ошибка ${response.status}`);
-      } else {
-        const data = await response.json();
-        const { count, results } = data;
-        setCountMessages(count);
-        const existingIds = new Set(messages.map((msg) => msg.id));
-        const filteredMessages = results.filter(
-          (msg) => !existingIds.has(msg.id)
-        );
-        setMessages((prevMessages) => [...prevMessages, ...filteredMessages]);
-        setIsLoading(false);
-      }
-    } catch (error) {
-      console.error('Error:', error.message);
-
-      navigate('/');
-    }
-  };
+  useCentrifugo(id, currentUser);
 
   const handleScrollMessages = (e) => {
+    if (!nextPageUrl) return;
     const containerElement = e.target;
     const { scrollTop, scrollHeight, clientHeight } = containerElement;
     const isTop = scrollHeight - (Math.abs(scrollTop) + clientHeight) < 5;
     if (isTop && !isLoading) {
       setLastHeight(scrollHeight);
-      getMessages();
+      dispatch(updateMessages(nextPageUrl));
     }
   };
 
@@ -101,12 +60,22 @@ export function Chat() {
   };
 
   useEffect(() => {
-    if (accessToken) {
-      getMessages();
-    } else {
-      navigate('/');
+    if (messages.length === 0) {
+      dispatch(getMessages(id));
     }
-  }, []);
+    if (!currentUser) {
+      dispatch(fetchCurrentUser());
+    }
+    if (!chatInfo) {
+      dispatch(getInfoChat(id));
+    }
+
+    return () => {
+      dispatch(resetCurrentChatState());
+      dispatch(resetCurrentUserState());
+      dispatch(resetMessagesState());
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (!messagesContainerRef.current) return;
@@ -127,15 +96,15 @@ export function Chat() {
   return (
     <Dropzone handleDrop={handleDrop}>
       <HeaderChat
-        title={infoChat?.title}
-        avatar={infoChat?.avatar}
-        is_private={infoChat?.is_private}
+        title={chatInfo?.title}
+        avatar={chatInfo?.avatar}
+        is_private={chatInfo?.is_private}
       />
 
       <main className="main">
         <SectionChat
           messages={messages}
-          isPrivateType={infoChat?.is_private}
+          isPrivateType={chatInfo?.is_private}
           currentUserId={currentUser?.id}
           messagesContainerRef={messagesContainerRef}
           handleScrollMessages={handleScrollMessages}

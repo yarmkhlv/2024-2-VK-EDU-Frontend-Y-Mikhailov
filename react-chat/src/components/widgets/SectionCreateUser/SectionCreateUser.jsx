@@ -1,12 +1,11 @@
 import { useId, useState, useRef } from 'react';
-import { rejectToast } from '../../../utils/toastes/toastes';
+import { rejectToast, successToast } from '../../../utils/toastes/toastes';
 import { useNavigate } from 'react-router-dom';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { validateField } from '../../../utils/validateField';
 import { MIN_VALID_LENGTH_USER_NAME } from '../../../utils/variables';
 import styles from './sectionCreateUser.module.scss';
-
-const API_URL = import.meta.env.VITE_API_URL;
+import { ENDPOINTS } from '../../../utils/API/endpoints';
 
 export function SectionCreateUser() {
   const navigate = useNavigate();
@@ -90,7 +89,7 @@ export function SectionCreateUser() {
     }
 
     try {
-      const response = await fetch(`${API_URL}/register/`, {
+      const response = await fetch(ENDPOINTS.REGISTER, {
         method: 'POST',
         body: formData,
       });
@@ -98,6 +97,9 @@ export function SectionCreateUser() {
       if (!response.ok) {
         if (response.status === 400) {
           const dataErrors = await response.json();
+          if (Array.isArray(dataErrors)) {
+            throw new Error(`${dataErrors[0]}`);
+          }
           const formattedErrors = Object.keys(dataErrors).reduce((acc, key) => {
             acc[key] = dataErrors[key].join('; ');
             return acc;
@@ -107,12 +109,15 @@ export function SectionCreateUser() {
           throw new Error(`Произошла ошибка ${response.status}`);
         }
       } else {
+        successToast('Пользователь успешно создан');
         navigate('/');
       }
     } catch (error) {
       console.error('Error:', error.message);
       if (error.message === 'Failed to fetch') {
         rejectToast('Не удалось создать пользователя, попробуйте позже.');
+      } else {
+        rejectToast(error.message);
       }
     } finally {
       setIsLoading(false);

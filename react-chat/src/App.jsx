@@ -13,19 +13,19 @@ import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
-    <AuthProvider>
-      <HashRouter>
+    <HashRouter>
+      <AuthProvider>
         <Routes>
           <Route path="/chatlist" element={<ChatList />} />
-          <Route path="/chat/:id" element={<Chat />} />
-          <Route path="/editprofile" element={<EditProfile />} />
-          <Route path="/createuser" element={<CreateUser />} />
           <Route path="/" element={<Login />} />
+          <Route path="/editprofile" element={<EditProfile />} />
+          <Route path="/chat/:id" element={<Chat />} />
+          <Route path="/createuser" element={<CreateUser />} />
           <Route path="/*" element={<Error />} />
         </Routes>
-      </HashRouter>
+      </AuthProvider>
       <ToastContainer />
-    </AuthProvider>
+    </HashRouter>
   );
 }
 

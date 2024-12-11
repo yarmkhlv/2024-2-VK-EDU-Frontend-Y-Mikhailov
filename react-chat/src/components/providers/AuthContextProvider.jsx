@@ -1,58 +1,64 @@
-import { useState, createContext } from 'react';
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
-export const AuthContext = createContext();
+import { clearTokens, setRefreshToken } from '../../store/auth/slice';
+import { refreshTokens } from '../../store/auth/thunk';
 
-const API_URL = import.meta.env.VITE_API_URL;
+const REFRESH_INTERVAL = 25 * 60 * 1000; // 25 минут в миллисекундах
+
+const saveTokensAtSessionStorage = (access, refresh) => {
+  sessionStorage.setItem('accessToken', access);
+  sessionStorage.setItem('refreshToken', refresh);
+};
 
 export function AuthProvider({ children }) {
-  const [accessToken, setAccessToken] = useState(null);
-  const [refreshToken, setRefreshToken] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { refreshToken } = useSelector((state) => state.auth);
 
-  const setTokens = (access, refresh) => {
-    setAccessToken(access);
-    setRefreshToken(refresh);
+  const handleLogout = () => {
+    dispatch(clearTokens());
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('refreshToken');
+    navigate('/', { replace: true });
   };
 
-  const logout = () => {
-    setAccessToken(null);
-    setRefreshToken(null);
-  };
+  useEffect(() => {
+    const storedRefreshToken = sessionStorage.getItem('refreshToken');
 
-  const refreshAccessToken = async () => {
-    try {
-      const response = await fetch(`${API_URL}/auth/refresh/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ refresh: refreshToken }),
-      });
+    if (storedRefreshToken) {
+      const decoded = jwtDecode(storedRefreshToken);
+      const expirationTime = decoded.exp * 1000;
+      const now = Date.now();
 
-      if (!response.ok) {
-        throw new Error('Ошибка получения токена');
+      if (expirationTime - now > REFRESH_INTERVAL) {
+        dispatch(setRefreshToken(storedRefreshToken));
+      } else {
+        handleLogout();
       }
-
-      const data = await response.json();
-      const { access, refresh } = data;
-      setTokens(access, refresh);
-      return access;
-    } catch (err) {
-      console.error('Token refresh error', err);
-      return null;
+    } else {
+      handleLogout();
     }
-  };
+  }, [dispatch]);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        accessToken,
-        refreshToken,
-        setTokens,
-        logout,
-        refreshAccessToken,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  useEffect(() => {
+    if (refreshToken) {
+      const interval = setInterval(() => {
+        dispatch(refreshTokens()).then((action) => {
+          if (refreshTokens.fulfilled.match(action)) {
+            const { access, refresh } = action.payload;
+            saveTokensAtSessionStorage(access, refresh);
+          } else {
+            handleLogout();
+          }
+        });
+      }, REFRESH_INTERVAL);
+
+      return () => clearInterval(interval);
+    }
+  }, [refreshToken, dispatch]);
+
+  return <>{children}</>;
 }

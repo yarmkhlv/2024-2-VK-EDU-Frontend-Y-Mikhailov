@@ -1,4 +1,5 @@
 import { useState, useRef, useId } from 'react';
+import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import { Modal } from '../../shared/Modal/Modal';
 import styles from './sectionInput.module.scss';
@@ -10,7 +11,6 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ImageIcon from '@mui/icons-material/Image';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
-import { useAuth } from '../../providers/helpers/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { rejectToast } from '../../../utils/toastes/toastes';
 import { generateTitleModalHeader } from './helpers/generateTitleModalHeader';
@@ -27,7 +27,9 @@ const INVALID_CREATE_TOKEN_ERROR = `Ошибка в создании токен�
 export function SectionInput({ id, selectedImages, setSelectedImages }) {
   const navigate = useNavigate();
   const geolocation = navigator.geolocation;
-  const { accessToken, refreshAccessToken } = useAuth();
+  const { accessToken, refreshAccessToken } = useSelector(
+    (state) => state.auth
+  );
 
   const inputImageId = useId();
 
