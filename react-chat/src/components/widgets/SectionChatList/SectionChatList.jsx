@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ChatItem } from '../ChatItem/ChatItem';
+import { Loader } from '../Loader/Loader';
 import { Menu } from './ui/Menu/Menu';
 import { fetchChatList, updateChatList } from '../../../store/chatList/thunk';
 import { resetChatState } from '../../../store/chatList/slice';
@@ -77,7 +78,7 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
   }, [dispatch, isAuthChecking]);
 
   if (isAuthChecking) {
-    return <div>Загрузка...</div>;
+    return <Loader isLoading={isAuthChecking} />;
   }
 
   return (

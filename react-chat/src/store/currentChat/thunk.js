@@ -8,10 +8,6 @@ export const getInfoChat = createAsyncThunk(
     const state = getState();
     const accessToken = state.auth.accessToken;
 
-    if (!accessToken || !id) {
-      return rejectWithValue('No access token or chat ID provided');
-    }
-
     let retryCount = 1;
 
     try {

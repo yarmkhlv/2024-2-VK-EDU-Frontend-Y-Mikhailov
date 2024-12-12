@@ -13,12 +13,16 @@ import { getInfoChat } from '../store/currentChat/thunk';
 import { resetCurrentChatState } from '../store/currentChat/slice';
 import { resetCurrentUserState } from '../store/currentUser/slice';
 import { resetMessagesState } from '../store/messages/slice';
+import { Loader } from '../components/widgets/Loader/Loader';
 
 export function Chat() {
   const dispatch = useDispatch();
   const { id } = useParams();
+
+  const { isAuthChecking } = useSelector((state) => state.auth);
   const currentUser = useSelector((state) => state.currentUser.data);
   const chatInfo = useSelector((state) => state.currentChat.data);
+
   const { messages, isLoading, nextPageUrl } = useSelector(
     (state) => state.messages
   );
@@ -60,6 +64,7 @@ export function Chat() {
   };
 
   useEffect(() => {
+    if (isAuthChecking) return;
     if (messages.length === 0) {
       dispatch(getMessages(id));
     }
@@ -75,7 +80,7 @@ export function Chat() {
       dispatch(resetCurrentUserState());
       dispatch(resetMessagesState());
     };
-  }, [dispatch]);
+  }, [dispatch, isAuthChecking]);
 
   useEffect(() => {
     if (!messagesContainerRef.current) return;
@@ -93,6 +98,10 @@ export function Chat() {
     }
   }, [messages, lastHeight]);
 
+  if (isAuthChecking) {
+    return <Loader isLoading={isAuthChecking} />;
+  }
+
   return (
     <Dropzone handleDrop={handleDrop}>
       <HeaderChat
@@ -108,6 +117,7 @@ export function Chat() {
           currentUserId={currentUser?.id}
           messagesContainerRef={messagesContainerRef}
           handleScrollMessages={handleScrollMessages}
+          isLoading={isLoading}
         />
         <SectionInput
           id={id}
