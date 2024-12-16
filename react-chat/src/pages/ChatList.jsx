@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { Modal } from '../components/shared/Modal/Modal';
 import { HeaderChatList } from '../components/widgets/HeaderChatList/HeaderChatList';
 import { SectionChatList } from '../components/widgets/SectionChatList/SectionChatList';

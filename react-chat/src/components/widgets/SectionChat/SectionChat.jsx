@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import styles from './sectionChat.module.scss';
 import { PrivateMessage } from './ui/PrivateMessage/PrivateMessage';
 import { GeneralMessage } from './ui/GeneralMessage/GeneralMessage';
+import { Loader } from '../Loader/Loader';
 
 export function SectionChat({
   messages,
@@ -9,6 +10,7 @@ export function SectionChat({
   currentUserId,
   messagesContainerRef,
   handleScrollMessages,
+  isLoading,
 }) {
   const renderMessages = messages.map((item) =>
     isPrivateType ? (
@@ -28,7 +30,9 @@ export function SectionChat({
 
   return (
     <section id="sectionChat" className={styles.section} tabIndex="-1">
-      {renderMessages.length < 1 ? (
+      {isLoading ? (
+        <Loader isLoading={isLoading} />
+      ) : renderMessages.length < 1 ? (
         <div className={styles.emptyInfoMessage}>Пока сообщений нет</div>
       ) : (
         <div className={styles.container}>
