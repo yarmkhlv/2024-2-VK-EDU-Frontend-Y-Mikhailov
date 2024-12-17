@@ -10,3 +10,12 @@ export const STATUS = {
   RESOLVED: 'resolved',
   REJECTED: 'rejected',
 };
+
+export const PAGES = {
+  LOGIN: '/',
+  CREATE_USER: '/createuser',
+  EDIT_PROFILE: '/editprofile',
+  CHAT_LIST: '/chatlist',
+  CHAT: '/chat/:id',
+  ERROR_PAGE: '/*',
+};

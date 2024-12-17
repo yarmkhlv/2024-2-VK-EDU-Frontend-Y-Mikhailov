@@ -6,7 +6,6 @@ const authSlice = createSlice({
   initialState: {
     accessToken: null,
     refreshToken: null,
-    isAuthChecking: true,
     status: null,
     error: null,
   },
@@ -24,9 +23,6 @@ const authSlice = createSlice({
     },
     clearAccessToken: (state) => {
       state.accessToken = null;
-    },
-    setAuthChecking: (state, action) => {
-      state.isAuthChecking = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -66,12 +62,7 @@ const authSlice = createSlice({
   },
 });
 
-export const {
-  setRefreshToken,
-  clearTokens,
-  clearAccessToken,
-  setTokens,
-  setAuthChecking,
-} = authSlice.actions;
+export const { setRefreshToken, clearTokens, clearAccessToken, setTokens } =
+  authSlice.actions;
 
 export default authSlice.reducer;
