@@ -1,13 +1,11 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
 import {
   clearTokens,
   setRefreshToken,
   setTokens,
-  setAuthChecking,
 } from '../../store/auth/slice';
 import { refreshTokens } from '../../store/auth/thunk';
 
@@ -19,7 +17,6 @@ const saveTokensAtSessionStorage = (access, refresh) => {
 };
 
 export function AuthProvider({ children }) {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { refreshToken } = useSelector((state) => state.auth);
 
@@ -27,13 +24,10 @@ export function AuthProvider({ children }) {
     dispatch(clearTokens());
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('refreshToken');
-    navigate('/', { replace: true });
   };
 
   useEffect(() => {
     const checkAuth = async () => {
-      dispatch(setAuthChecking(true));
-
       const storedAccessToken = sessionStorage.getItem('accessToken');
       const storedRefreshToken = sessionStorage.getItem('refreshToken');
 
@@ -59,7 +53,6 @@ export function AuthProvider({ children }) {
       } else {
         handleLogout();
       }
-      dispatch(setAuthChecking(false));
     };
 
     checkAuth();
