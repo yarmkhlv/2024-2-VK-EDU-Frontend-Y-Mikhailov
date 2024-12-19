@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ChatItem } from '../ChatItem/ChatItem';
-import { Loader } from '../Loader/Loader';
 import { Menu } from './ui/Menu/Menu';
 import { fetchChatList, updateChatList } from '../../../store/chatList/thunk';
 import { resetChatState } from '../../../store/chatList/slice';
@@ -9,12 +8,12 @@ import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './sectionChatList.module.scss';
 import clsx from 'clsx';
+import { Loader } from '../Loader/Loader';
 
 export function SectionChatList({ openModal, setTypeCreateChat }) {
   const chatListRef = useRef(null);
 
   const dispatch = useDispatch();
-  const { isAuthChecking } = useSelector((state) => state.auth);
   const { chatList, isLoading, nextPageUrl } = useSelector(
     (state) => state.chatList
   );
@@ -67,7 +66,6 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
   }, [chatList, isLoading, nextPageUrl]);
 
   useEffect(() => {
-    if (isAuthChecking) return;
     if (chatList.length === 0) {
       dispatch(fetchChatList());
     }
@@ -75,45 +73,48 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
     return () => {
       dispatch(resetChatState());
     };
-  }, [dispatch, isAuthChecking]);
-
-  if (isAuthChecking) {
-    return <Loader isLoading={isAuthChecking} />;
-  }
+  }, [dispatch]);
 
   return (
     <section className={styles.section} tabIndex="-1">
       <div className={styles.container}>
-        <div
-          ref={chatListRef}
-          onScroll={handleScrollChatList}
-          className={styles.chatList}
-        >
-          {renderChatList}
-        </div>
-        <div className={styles.createChatContainer}>
-          <button
-            className={clsx(
-              styles.createChatBtn,
-              isOpenMenu && styles.noAnimation
-            )}
-            onClick={handleClickMenuBtn}
-          >
-            {isOpenMenu ? (
-              <CloseIcon sx={{ color: '#837d7d' }} />
-            ) : (
-              <EditIcon sx={{ color: '#837d7d' }} />
-            )}
-          </button>
-          {isOpenMenu && (
-            <Menu
-              openModal={openModal}
-              isOpenMenu={isOpenMenu}
-              setIsOpenMenu={setIsOpenMenu}
-              setTypeCreateChat={setTypeCreateChat}
-            />
-          )}
-        </div>
+        {isLoading ? (
+          <Loader isLoading={isLoading} />
+        ) : (
+          <>
+            <div
+              ref={chatListRef}
+              onScroll={handleScrollChatList}
+              className={styles.chatList}
+            >
+              {renderChatList}
+            </div>
+
+            <div className={styles.createChatContainer}>
+              <button
+                className={clsx(
+                  styles.createChatBtn,
+                  isOpenMenu && styles.noAnimation
+                )}
+                onClick={handleClickMenuBtn}
+              >
+                {isOpenMenu ? (
+                  <CloseIcon sx={{ color: '#837d7d' }} />
+                ) : (
+                  <EditIcon sx={{ color: '#837d7d' }} />
+                )}
+              </button>
+              {isOpenMenu && (
+                <Menu
+                  openModal={openModal}
+                  isOpenMenu={isOpenMenu}
+                  setIsOpenMenu={setIsOpenMenu}
+                  setTypeCreateChat={setTypeCreateChat}
+                />
+              )}
+            </div>
+          </>
+        )}
       </div>
     </section>
   );
