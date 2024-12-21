@@ -92,6 +92,7 @@ export function SectionChatList({ openModal, setTypeCreateChat }) {
 
             <div className={styles.createChatContainer}>
               <button
+                aria-label="Кнопка создания нового чата"
                 className={clsx(
                   styles.createChatBtn,
                   isOpenMenu && styles.noAnimation
