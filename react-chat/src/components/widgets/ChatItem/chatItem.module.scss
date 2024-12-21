@@ -46,6 +46,7 @@
 .userImg {
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 .initials {
@@ -71,6 +72,8 @@
 }
 
 .userInfoBottom {
+  max-width: 80%;
+
   font-size: 14px;
   color: #656565;
 

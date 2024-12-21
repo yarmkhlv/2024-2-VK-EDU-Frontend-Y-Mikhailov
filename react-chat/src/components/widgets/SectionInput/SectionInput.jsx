@@ -327,6 +327,7 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
             {isOpenAttachData && !isRecording && (
               <div className={styles.attachData}>
                 <div
+                  aria-label="Кнопка отправки вашего местоположения"
                   type="button"
                   onClick={handleClickGeoBtn}
                   className={styles.attachItem}
@@ -351,6 +352,7 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
             )}
             {!isRecording && (
               <button
+                aria-label="Кнопка для доступа к расширенному функционалу отправки данных"
                 type="button"
                 onClick={handleClickAttachBtn}
                 className={styles.attachBtn}
@@ -362,6 +364,7 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
           <div className={styles.btnsProcessRecorderContainer}>
             {isRecording && (
               <button
+                aria-label="Кнопка остановки и удаления голосового сообщения"
                 type="button"
                 onClick={handleDeleteRecording}
                 className={styles.delBtn}
@@ -370,11 +373,16 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
               </button>
             )}
             {isRecording || inputValue.length > 0 ? (
-              <button type="submit" className={styles.submitBtn}>
+              <button
+                aria-label="Кнопка отправки сообщения"
+                type="submit"
+                className={styles.submitBtn}
+              >
                 <SendIcon sx={{ color: '#837d7d' }} />
               </button>
             ) : (
               <button
+                aria-label="Кнопка начала записи голосового сообщения"
                 type="button"
                 onClick={handleStartRecording}
                 className={styles.voiceBtn}
@@ -388,6 +396,7 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
       <Modal isOpen={selectedImages.length > 0} classes={modalClasses}>
         <div className={styles.modalHeader}>
           <button
+            aria-label="Кнопка закрытия предпросмотра отправляемых изображений"
             className={styles.closeBtn}
             type="button"
             onClick={closePreviewImages}
@@ -396,6 +405,7 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
           </button>
           {generateTitleModalHeader(selectedImages.length)}
           <button
+            aria-label="Кнопка отправки изображений"
             className={styles.doneBtn}
             type="button"
             onClick={handleSubmitImages}
@@ -409,6 +419,7 @@ export function SectionInput({ id, selectedImages, setSelectedImages }) {
               <img src={img.previewUrl} className={styles.img} alt="Preview" />
               <button
                 type="button"
+                aria-label="Кнопка удаления отправляемого изображения"
                 onClick={() => handleRemoveImg(img.file.name)}
                 className={styles.removeImageBtn}
               >

@@ -91,7 +91,12 @@ export function SectionLogin() {
             <div className={styles.errorText}>{errors.detail}</div>
           )}
           <div className={styles.btnBlock}>
-            <button className={styles.btn} onClick={handleSubmit} type="submit">
+            <button
+              aria-label="Кнопка авторизации пользователя"
+              className={styles.btn}
+              onClick={handleSubmit}
+              type="submit"
+            >
               Войти
             </button>
             <Link to="/createuser" className={styles.btn}>

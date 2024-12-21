@@ -12,6 +12,8 @@ export function SectionChat({
   handleScrollMessages,
   isLoading,
 }) {
+  const isFirstLoading = isLoading && messages.length < 1;
+
   const renderMessages = messages.map((item) =>
     isPrivateType ? (
       <PrivateMessage
@@ -30,8 +32,8 @@ export function SectionChat({
 
   return (
     <section id="sectionChat" className={styles.section} tabIndex="-1">
-      {isLoading ? (
-        <Loader isLoading={isLoading} />
+      {isFirstLoading ? (
+        <Loader isLoading={isFirstLoading} />
       ) : renderMessages.length < 1 ? (
         <div className={styles.emptyInfoMessage}>Пока сообщений нет</div>
       ) : (

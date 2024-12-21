@@ -18,6 +18,8 @@ export function Chat() {
   const dispatch = useDispatch();
   const { id } = useParams();
 
+  const { isAuthChecking } = useSelector((state) => state.auth);
+
   const currentUser = useSelector((state) => state.currentUser.data);
   const chatInfo = useSelector((state) => state.currentChat.data);
 
@@ -62,6 +64,7 @@ export function Chat() {
   };
 
   useEffect(() => {
+    if (isAuthChecking) return;
     if (messages.length === 0) {
       dispatch(getMessages(id));
     }
@@ -77,7 +80,7 @@ export function Chat() {
       dispatch(resetCurrentUserState());
       dispatch(resetMessagesState());
     };
-  }, [dispatch]);
+  }, [dispatch, isAuthChecking]);
 
   useEffect(() => {
     if (!messagesContainerRef.current) return;

@@ -8,7 +8,7 @@ import './App.css';
 import { EditProfile } from './pages/EditProfile';
 import { CreateUser } from './pages/CreateUser';
 import { Login } from './pages/Login';
-import { AuthProvider } from './components/providers/AuthContextProvider';
+import { AuthIntervalRefreshProvider } from './components/providers/AuthIntervalRefreshProvider';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PublicRoute from './components/routes/PublicRoute';
@@ -17,7 +17,7 @@ import { PAGES } from './utils/variables';
 function App() {
   return (
     <HashRouter>
-      <AuthProvider>
+      <AuthIntervalRefreshProvider>
         <Routes>
           <Route
             path={PAGES.LOGIN}
@@ -61,7 +61,7 @@ function App() {
           />
           <Route path={PAGES.ERROR_PAGE} element={<Error />} />
         </Routes>
-      </AuthProvider>
+      </AuthIntervalRefreshProvider>
       <ToastContainer />
     </HashRouter>
   );

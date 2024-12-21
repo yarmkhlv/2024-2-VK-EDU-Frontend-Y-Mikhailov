@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { convertDate } from '../../../../../utils/convertDate';
 import styles from './generalMessage.module.scss';
+import { LazyImage } from '../../../../shared/LazyImage/LazyImage';
 
 export function GeneralMessage({ currentUserId, messageData }) {
   const { sender, text, voice, created_at, files } = messageData;
@@ -26,7 +27,7 @@ export function GeneralMessage({ currentUserId, messageData }) {
     >
       <div className={styles.avatar}>
         {sender.avatar ? (
-          <img
+          <LazyImage
             className={styles.userImg}
             src={sender.avatar}
             alt="Изображение чата"
@@ -48,7 +49,12 @@ export function GeneralMessage({ currentUserId, messageData }) {
           ) : files.length > 0 ? (
             <div className={styles.imgContainer}>
               {files.map((el, i) => (
-                <img className={styles.img} key={i} src={el.item} />
+                <img
+                  alt="изображение из сообщения"
+                  className={styles.img}
+                  key={i}
+                  src={el.item}
+                />
               ))}
               {text}
             </div>

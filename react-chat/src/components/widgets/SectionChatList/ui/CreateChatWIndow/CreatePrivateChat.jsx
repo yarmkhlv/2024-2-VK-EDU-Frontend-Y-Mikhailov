@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Loader } from '../../../Loader/Loader';
 import {
   fetchUserList,
   updateUserList,
 } from '../../../../../store/userList/thunk';
+import { resetUserListState } from '../../../../../store/userList/slice';
 import { createPrivateChat } from '../../../../../store/chatList/thunk';
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -23,6 +25,7 @@ export function CreatePrivateChat({ onClickReturn }) {
   const { userList, isLoading, nextPageUrl } = useSelector(
     (state) => state.userList
   );
+  const isFirstLoading = isLoading && userList.length < 1;
   const userListContainerRef = useRef(null);
   const [lastHeight, setLastHeight] = useState(null);
 
@@ -71,25 +74,32 @@ export function CreatePrivateChat({ onClickReturn }) {
     if (userList.length === 0) {
       dispatch(fetchUserList());
     }
-  }, [dispatch, userList.length]);
+    return () => {
+      dispatch(resetUserListState());
+    };
+  }, [dispatch]);
 
-  if (renderUserList?.length < 1) return null;
-  if (userList.length < 1) return <div>Пользователи загружаются</div>;
   return (
     <>
-      <div className={styles.header}>
-        <button onClick={onClickReturn}>
-          <ArrowBackIosNewIcon sx={{ color: '#837d7d' }} />
-        </button>
-        <div className={styles.title}>Выберите пользователя</div>
-      </div>
-      <div
-        ref={userListContainerRef}
-        onScroll={handleScroll}
-        className={styles.containerUserList}
-      >
-        {renderUserList}
-      </div>
+      {isFirstLoading ? (
+        <Loader isLoading={isFirstLoading} />
+      ) : (
+        <>
+          <div className={styles.header}>
+            <button onClick={onClickReturn}>
+              <ArrowBackIosNewIcon sx={{ color: '#837d7d' }} />
+            </button>
+            <div className={styles.title}>Выберите пользователя</div>
+          </div>
+          <div
+            ref={userListContainerRef}
+            onScroll={handleScroll}
+            className={styles.containerUserList}
+          >
+            {renderUserList}
+          </div>
+        </>
+      )}
     </>
   );
 }

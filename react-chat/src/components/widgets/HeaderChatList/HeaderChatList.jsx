@@ -25,7 +25,11 @@ export function HeaderChatList() {
       <div className={styles.container}>
         <nav className={styles.content}>
           <div className={styles.leftBlock}>
-            <Link to="/editprofile" className={styles.menuButton}>
+            <Link
+              to="/editprofile"
+              className={styles.menuButton}
+              aria-label="Кнопка перехода на страницу редактирования информации пользователя"
+            >
               <MenuIcon sx={{ color: '#837d7d' }} />
             </Link>
           </div>
@@ -34,12 +38,19 @@ export function HeaderChatList() {
           </div>
           <div className={styles.rightBlock}>
             <div className={styles.searchButtonBlock}>
-              <button className={styles.searchButton}>
+              <button
+                aria-label="Кнопка поиска по чатам"
+                className={styles.searchButton}
+              >
                 <SearchIcon sx={{ color: '#837d7d' }} />
               </button>
             </div>
             <div className={styles.logoutButtonBlock}>
-              <button onClick={handleLogout} className={styles.logoutButton}>
+              <button
+                aria-label="Кнопка выхода из аккаунта"
+                onClick={handleLogout}
+                className={styles.logoutButton}
+              >
                 <LogoutIcon sx={{ color: '#837d7d' }} />
               </button>
             </div>
