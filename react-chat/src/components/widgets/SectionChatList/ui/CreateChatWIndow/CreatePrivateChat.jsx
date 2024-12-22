@@ -12,10 +12,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 
 import styles from './createPrivateChat.module.scss';
 import { UserItem } from '../../../UserItem/UserItem';
-import {
-  rejectToast,
-  successToast,
-} from '../../../../../utils/toastes/toastes';
+import { rejectToast } from '../../../../../utils/toastes/toastes';
 
 const IS_ALREADY_EXIST = 'Private chat with these members already exists';
 
@@ -35,7 +32,7 @@ export function CreatePrivateChat({ onClickReturn }) {
       .then((data) => navigate(`/chat/${data.id}`))
       .catch((error) => {
         if (error === IS_ALREADY_EXIST) {
-          successToast('Чат с данным пользователем уже существует.', 3000);
+          rejectToast('Чат с данным пользователем уже существует.', 3000);
           onClickReturn();
         } else {
           console.error('Ошибка создания чата:', error);

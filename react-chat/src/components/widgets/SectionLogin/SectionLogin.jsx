@@ -1,4 +1,5 @@
 import { useId, useState } from 'react';
+import clsx from 'clsx';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../../store/auth/thunk';
 import { useNavigate } from 'react-router-dom';
@@ -65,9 +66,15 @@ export function SectionLogin() {
               placeholder="Введите имя пользователя"
               type="text"
             />
-            {errors.username && (
-              <div className={styles.errorText}>{errors.username}</div>
-            )}
+
+            <div
+              className={clsx(
+                styles.errorText,
+                errors.username && styles.errorTextVisible
+              )}
+            >
+              {errors.username}
+            </div>
           </div>
           <div className={styles.fieldContainer}>
             <label htmlFor={passwordInputId} className={styles.fieldName}>
@@ -83,13 +90,25 @@ export function SectionLogin() {
               placeholder="Введите пароль"
               type="password"
             />
-            {errors.password && (
-              <div className={styles.errorText}>{errors.password}</div>
-            )}
+            <div
+              className={clsx(
+                styles.errorText,
+                errors.password && styles.errorTextVisible
+              )}
+            >
+              {errors.password}
+            </div>
           </div>
-          {errors.detail && (
-            <div className={styles.errorText}>{errors.detail}</div>
-          )}
+
+          <div
+            className={clsx(
+              styles.errorText,
+              errors.detail && styles.errorTextVisible
+            )}
+          >
+            {errors.detail}
+          </div>
+
           <div className={styles.btnBlock}>
             <button
               aria-label="Кнопка авторизации пользователя"
