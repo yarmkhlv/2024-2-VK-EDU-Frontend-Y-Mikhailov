@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { PAGES } from '../../utils/variables';
@@ -16,12 +16,12 @@ export function PrivateRoute({ children }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     dispatch(clearTokens());
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('refreshToken');
     navigate(PAGES.LOGIN, { replace: true });
-  };
+  }, [dispatch, navigate]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -55,7 +55,7 @@ export function PrivateRoute({ children }) {
     };
 
     checkAuth();
-  }, [dispatch]);
+  }, [dispatch, handleLogout]);
 
   return children;
 }
