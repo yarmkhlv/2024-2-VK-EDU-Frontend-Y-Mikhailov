@@ -1,4 +1,5 @@
 import { useId, useState, useEffect, useRef } from 'react';
+import clsx from 'clsx';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchCurrentUser,
@@ -13,6 +14,7 @@ import { successToast, rejectToast } from '../../../utils/toastes/toastes';
 export function SectionEditProfile() {
   const dispatch = useDispatch();
   const { data, isLoading } = useSelector((state) => state.currentUser);
+  const { isAuthChecking } = useSelector((state) => state.auth);
   const refAvatarInput = useRef(null);
 
   const nameInputId = useId();
@@ -141,6 +143,7 @@ export function SectionEditProfile() {
   };
 
   useEffect(() => {
+    if (isAuthChecking) return;
     if (!data) {
       dispatch(fetchCurrentUser());
     } else {
@@ -154,7 +157,7 @@ export function SectionEditProfile() {
         avatar: null,
       });
     }
-  }, [dispatch, data]);
+  }, [dispatch, data, isAuthChecking]);
 
   return (
     <section className={styles.section} tabIndex="-1">
@@ -202,9 +205,15 @@ export function SectionEditProfile() {
               type="file"
               accept="image/*"
             />
-            {errors.avatar && (
-              <div className={styles.errorText}>{errors.avatar}</div>
-            )}
+
+            <div
+              className={clsx(
+                styles.errorText,
+                errors.avatar && styles.errorTextVisible
+              )}
+            >
+              {errors.avatar}
+            </div>
           </div>
           <div className={styles.containerForFirstName}>
             <label htmlFor={nameInputId} className={styles.fieldName}>
@@ -220,9 +229,14 @@ export function SectionEditProfile() {
               placeholder="Введите имя"
               type="text"
             />
-            {errors.firstname && (
-              <div className={styles.errorText}>{errors.firstname}</div>
-            )}
+            <div
+              className={clsx(
+                styles.errorText,
+                errors.firstname && styles.errorTextVisible
+              )}
+            >
+              {errors.firstname}
+            </div>
           </div>
 
           <div className={styles.containerForLastName}>
@@ -239,9 +253,15 @@ export function SectionEditProfile() {
               placeholder="Введите фамилию"
               type="text"
             />
-            {errors.lastname && (
-              <div className={styles.errorText}>{errors.lastname}</div>
-            )}
+
+            <div
+              className={clsx(
+                styles.errorText,
+                errors.lastname && styles.errorTextVisible
+              )}
+            >
+              {errors.lastname}
+            </div>
           </div>
         </div>
 
@@ -260,7 +280,14 @@ export function SectionEditProfile() {
             onChange={handleChangeInput}
           />
           {errors.username ? (
-            <div className={styles.errorText}>{errors.username}</div>
+            <div
+              className={clsx(
+                styles.errorText,
+                errors.username && styles.errorTextVisible
+              )}
+            >
+              {errors.username}
+            </div>
           ) : (
             <div className={styles.recommendText}>
               Имя пользователя должно быть не менее 4 символов
@@ -280,9 +307,23 @@ export function SectionEditProfile() {
             rows={3}
             placeholder="Расскажите о себе"
           />
-          {errors.bio && <div className={styles.errorText}>{errors.bio}</div>}
+          <div
+            className={clsx(
+              styles.errorText,
+              errors.bio && styles.errorTextVisible
+            )}
+          >
+            {errors.bio}
+          </div>
         </div>
-        <button className={styles.submitBtn} type="submit">
+        <button
+          disabled={!formIsChanged}
+          className={clsx(
+            styles.submitBtn,
+            !formIsChanged && styles.submitBtnDisabled
+          )}
+          type="submit"
+        >
           Сохранить изменения
         </button>
       </form>
