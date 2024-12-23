@@ -22,8 +22,13 @@ const languageSlice = createSlice({
         },
         swapLanguages(state) {
             const temp = state.fromLanguage;
-            state.fromLanguage = state.toLanguage;
-            state.toLanguage = temp;
+            if (temp === 'Autodetect') {
+                state.fromLanguage = state.toLanguage;
+                state.toLanguage = 'en-GB';
+            } else {
+                state.fromLanguage = state.toLanguage;
+                state.toLanguage = temp;
+            }
         },
     },
 });
