@@ -105,9 +105,11 @@
     'a c';
 
   column-gap: 20px;
+  row-gap: 5px;
 
   @include tablet {
     column-gap: 40px;
+    row-gap: 10px;
   }
 
   .containerForFirstName {
@@ -123,12 +125,18 @@
 
   .errorText,
   .recommendText {
+    height: 14px;
+
     margin-top: 4px;
 
     font-size: 12px;
   }
   .errorText {
+    visibility: hidden;
     color: red;
+  }
+  .errorTextVisible {
+    visibility: visible;
   }
   .recommendText {
     color: var(--color-gray-strong);
@@ -210,4 +218,9 @@
   padding: 15px;
   border: 1px solid black;
   border-radius: 5px;
+
+  &.submitBtnDisabled {
+    cursor: not-allowed;
+    background-color: #cbcbcb8f;
+  }
 }

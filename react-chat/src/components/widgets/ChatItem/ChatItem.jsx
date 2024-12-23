@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { countImageMessage } from './helpers/countImageMessage';
 import { convertDate } from '../../../utils/convertDate';
 import styles from './chatItem.module.scss';
+import { LazyImage } from '../../shared/LazyImage/LazyImage';
 
 export function ChatItem({ title, avatar, last_message, id, is_private }) {
   const avatarInitials = is_private
@@ -29,7 +30,7 @@ export function ChatItem({ title, avatar, last_message, id, is_private }) {
       <div className={styles.user}>
         <div className={styles.avatar}>
           {avatar ? (
-            <img
+            <LazyImage
               className={styles.userImg}
               src={avatar}
               alt="Изображение чата"

@@ -19,7 +19,7 @@ export default [
         sourceType: 'module',
       },
     },
-    settings: { react: { version: '18.3' } },
+    settings: { react: { version: '18' } },
     plugins: {
       react,
       'react-hooks': reactHooks,
@@ -38,6 +38,7 @@ export default [
       ],
       'react/prop-types': 'off',
       'prettier/prettier': 'off',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
   },
   prettierConfig,

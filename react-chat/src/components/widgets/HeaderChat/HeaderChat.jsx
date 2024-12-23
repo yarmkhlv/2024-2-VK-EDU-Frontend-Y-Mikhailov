@@ -42,12 +42,18 @@ export function HeaderChat({ avatar, title, is_private }) {
           </div>
           <div className={styles.rightBlock}>
             <div className={styles.searchButtonBlock}>
-              <button className={styles.searchButton}>
+              <button
+                aria-label="Кнопка поиска по сообщениям"
+                className={styles.searchButton}
+              >
                 <SearchIcon sx={{ color: '#837d7d' }} />
               </button>
             </div>
             <div className={styles.paramsButtonBlock}>
-              <button className={styles.paramsButton}>
+              <button
+                aria-label="Кнопка дополнительного функционала"
+                className={styles.paramsButton}
+              >
                 <MoreVertIcon sx={{ color: '#837d7d' }} />
               </button>
             </div>
