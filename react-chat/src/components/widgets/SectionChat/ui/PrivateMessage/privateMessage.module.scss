@@ -35,7 +35,9 @@
 }
 .initials {
   font-weight: 600;
-  font-size: 24px;
+  font-size: 20px;
+
+  text-transform: uppercase;
 }
 
 @keyframes showNewMessage {

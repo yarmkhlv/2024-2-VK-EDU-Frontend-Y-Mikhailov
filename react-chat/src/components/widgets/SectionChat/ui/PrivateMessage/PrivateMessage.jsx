@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import clsx from 'clsx';
+import { LazyImage } from '../../../../shared/LazyImage/LazyImage';
 import { convertDate } from '../../../../../utils/convertDate';
 import styles from './privateMessage.module.scss';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -56,7 +57,12 @@ export function PrivateMessage({ currentUserId, messageData }) {
       ) : files.length > 0 ? (
         <div className={styles.imgContainer}>
           {files.map((el, i) => (
-            <img className={styles.img} key={i} src={el.item} />
+            <LazyImage
+              alt="изображение из сообщения"
+              className={styles.img}
+              key={i}
+              src={el.item}
+            />
           ))}
           {text}
         </div>
