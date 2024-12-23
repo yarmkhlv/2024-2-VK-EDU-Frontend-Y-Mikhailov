@@ -9,11 +9,18 @@ import clsx from 'clsx';
 import languages from '../../../utils/languages/languages.json';
 import { SwapBtn } from './ui/SwapBtn';
 import { RootState } from '../../../store';
+import {
+    setTextToTranslate,
+    setTranslatedText,
+} from '../../../store/translation/slice';
 
 export function LanguageOptions() {
     const dispatch = useDispatch();
     const { fromLanguage, toLanguage } = useSelector(
         (state: RootState) => state.language,
+    );
+    const { textToTranslate, translatedText } = useSelector(
+        (state: RootState) => state.translation,
     );
 
     const popularLanguages = ['Autodetect', 'ru-RU', 'en-GB', 'de-DE'];
@@ -23,18 +30,24 @@ export function LanguageOptions() {
 
     const handleClickSwapBtn = () => {
         dispatch(swapLanguages());
+        dispatch(setTextToTranslate(translatedText));
+        dispatch(setTranslatedText(textToTranslate));
     };
 
     const handleClickPopularLanguage = (item: string, isFrom: boolean) => {
         if (isFrom) {
             if (item === toLanguage) {
                 dispatch(swapLanguages());
+                dispatch(setTextToTranslate(translatedText));
+                dispatch(setTranslatedText(textToTranslate));
             } else {
                 dispatch(setFromLanguage(item));
             }
         } else {
             if (item === fromLanguage) {
                 dispatch(swapLanguages());
+                dispatch(setTextToTranslate(translatedText));
+                dispatch(setTranslatedText(textToTranslate));
             } else {
                 dispatch(setToLanguage(item));
             }
