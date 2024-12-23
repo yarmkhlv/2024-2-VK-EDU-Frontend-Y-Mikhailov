@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import DoneIcon from '@mui/icons-material/Done';
 import clsx from 'clsx';
 
 import styles from './headerEditProfile.module.scss';

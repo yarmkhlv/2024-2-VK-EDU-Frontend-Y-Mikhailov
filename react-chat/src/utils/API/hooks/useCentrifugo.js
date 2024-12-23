@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Centrifuge } from 'centrifuge';
 import {
@@ -13,16 +13,16 @@ export function useCentrifugo(id, currentUser) {
   const dispatch = useDispatch();
   const accessToken = useSelector((state) => state.auth.accessToken);
 
-  const getConnectionToken = async () => {
+  const getConnectionToken = useCallback(async () => {
     const response = await fetch(ENDPOINTS.CENTRIFUGO.CONNECT, {
       method: 'POST',
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     const data = await response.json();
     return data.token;
-  };
+  }, [accessToken]);
 
-  const getSubscriptionToken = async () => {
+  const getSubscriptionToken = useCallback(async () => {
     const response = await fetch(ENDPOINTS.CENTRIFUGO.SUBSCRIBE, {
       method: 'POST',
       headers: {
@@ -32,7 +32,7 @@ export function useCentrifugo(id, currentUser) {
     });
     const data = await response.json();
     return data.token;
-  };
+  }, [accessToken]);
 
   useEffect(() => {
     if (!accessToken || !currentUser) return;
@@ -87,5 +87,12 @@ export function useCentrifugo(id, currentUser) {
         centrifuge.disconnect();
       }
     };
-  }, [accessToken, currentUser]);
+  }, [
+    accessToken,
+    currentUser,
+    dispatch,
+    getConnectionToken,
+    getSubscriptionToken,
+    id,
+  ]);
 }

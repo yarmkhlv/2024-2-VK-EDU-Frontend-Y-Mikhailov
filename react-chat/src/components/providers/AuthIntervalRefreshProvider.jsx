@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { refreshTokens } from '../../store/auth/thunk';
 import { clearTokens } from '../../store/auth/slice';
@@ -15,11 +15,11 @@ export function AuthIntervalRefreshProvider({ children }) {
 
   const { refreshToken } = useSelector((state) => state.auth);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     dispatch(clearTokens());
     sessionStorage.removeItem('accessToken');
     sessionStorage.removeItem('refreshToken');
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     if (refreshToken) {
@@ -36,7 +36,7 @@ export function AuthIntervalRefreshProvider({ children }) {
 
       return () => clearInterval(interval);
     }
-  }, [refreshToken, dispatch]);
+  }, [refreshToken, dispatch, handleLogout]);
 
   return <>{children}</>;
 }

@@ -80,6 +80,7 @@ export function Chat() {
       dispatch(resetCurrentUserState());
       dispatch(resetMessagesState());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, isAuthChecking]);
 
   useEffect(() => {
