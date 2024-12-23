@@ -1,0 +1,50 @@
+@use '../../../styles/base/breakpoints.scss' as *;
+
+.translationBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+
+    row-gap: 20px;
+
+    @include desktop {
+        flex-direction: row;
+        column-gap: 20px;
+    }
+}
+.textarea,
+.resultBlock {
+    height: 144px;
+
+    @include desktop {
+        height: 244px;
+    }
+}
+.textarea {
+    width: 100%;
+    padding: 8px;
+
+    border: 1px solid rgb(0 0 0 / 20%);
+    border-radius: 8px;
+    outline: none;
+
+    font-size: 18px;
+    resize: none;
+}
+
+.resultBlock {
+    width: 100%;
+    padding: 8px;
+
+    background-color: rgb(0 0 0 / 4%);
+
+    border-radius: 8px;
+    outline: none;
+
+    font-size: 18px;
+}
+
+.resultPlaceholder {
+    color: gray;
+}

@@ -1,0 +1,77 @@
+.historyBlock {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.historyTitle {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.historyList {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.historyItem {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.choosedLanguages {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.lang {
+    font-weight: bold;
+}
+
+.arrow {
+    font-size: 1.2rem;
+    color: #888;
+}
+
+.translatedTexts {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.fromValue {
+    font-style: italic;
+    color: #555;
+}
+
+.toValue {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.clearHistoryButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.clearHistoryButton:hover {
+    background-color: #c9302c;
+}
+
+.clearHistoryButton:active {
+    background-color: #ac2925;
+}
